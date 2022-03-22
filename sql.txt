@@ -1,0 +1,8 @@
+SELECT COUNT(prodi) as total_prodi, prodi
+FROM mahasiswa_beasiswa
+
+SELECT COUNT(movies.genre_id) as total, movies.year as year, genres.genre_title AS title
+FROM movies
+INNER JOIN genres
+ON movies.genre_id = genres.genre_id
+GROUP BY movies.genre_id, movies.year
