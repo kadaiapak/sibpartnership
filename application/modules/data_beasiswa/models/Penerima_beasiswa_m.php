@@ -150,18 +150,37 @@ class Penerima_beasiswa_m extends CI_Model
     public function import_data($upload_array, $id)
     {
         foreach ($upload_array as $ur) {
-            $mahasiswa = array(
-                'nim' => $ur['nim']
-            );
             $mahasiswaBeasiswa = array(
                 'nim_mahasiswa' => $ur['nim'],
-                'id_beasiswa' => $id
+                'tm_msk' => $ur['tm_msk'],
+                'nama_mahasiswa' => $ur['nama'],
+                'jenis_kelamin' => $ur['jk'],
+                'prodi' => $ur['nam_prodi'],
+                'fakultas' => $ur['nam_fak'],
+                'jjp' => $ur['jjp'],
+                'ipk' => $ur['ipk'],
+                'nohp' => $ur['nohp'],
+                'tmp_lhr' => $ur['tmp_lhr'],
+                'tgl_lhr' => $ur['tgl_lhr'],
+                'agama' => $ur['agama'],
+                'id_beasiswa' => $id,
+                'status_beasiswa' => '3',
+                'created_by' => $this->fungsi->user_login()->username,
+                'tanggal_daftar' => date('Y-m-d H:i:s')
             );
-            $query = $this->db->get_where('mahasiswa', $mahasiswa);
-            if($query->num_rows() == 0){
-                $this->db->insert('mahasiswa', $ur);   
-            }
-                $this->db->insert('mahasiswa_beasiswa', $mahasiswaBeasiswa);             
+            $historis = array(
+                'nim' => $ur['nim'],
+                'id_beasiswa' => $id,
+                'status_beasiswa' => '3',
+                'keterangan' => 'penerima beasiswa',
+                'tanggal' => date('Y-m-d H:i:s')
+            );
+            $this->db->insert('historis_beasiswa', $historis);
+            // $query = $this->db->get_where('mahasiswa', $mahasiswa);
+            // if($query->num_rows() == 0){
+            //     $this->db->insert('mahasiswa', $ur);   
+            // }
+            $this->db->insert('mahasiswa_beasiswa', $mahasiswaBeasiswa);             
         }
     }
 

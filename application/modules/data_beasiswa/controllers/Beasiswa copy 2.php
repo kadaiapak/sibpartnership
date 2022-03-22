@@ -327,28 +327,23 @@ class Beasiswa extends CI_Controller
                     if($numRow > 1){
                         // $nim = $cells[1]->getValue();
                         $data = array(
-                            'nim' => $cells[0]->getValue()
+                            'nim' => $cells[1]->getValue(),
+                            'nama' => $cells[2]->getValue(),
+                            'prodi' => $cells[3]->getValue(),
+                            'fakultas' => $cells[4]->getValue()
                         );
                         if(strlen($data['nim']) != 8){
                             // $msg = $nim.' jumlah digit tidak sesuai<br>';
                             $msg = "<div class='alert alert-danger' role='alert'>".$data['nim']." digit tidak sesuai</div>";
                             array_push($err_array, $msg);
                         }
-                        $dataMahasiswa = $this->getmhsapis($data['nim']);
-                        if($dataMahasiswa->respon == 2){
-                            $msg = "<div class='alert alert-danger' role='alert'>".$data['nim']." data mahasiswa tidak ditemukan</div>";
-                            array_push($err_array, $msg);
+                        $cek = $this->penerima->cekBeasiswa($data['nim']);
+                        if(!$cek){
+                            array_push($upload_array, $data);
                         }else {
-                            $arrmhs = get_object_vars($dataMahasiswa->data);
-                            $cek = $this->penerima->cekBeasiswa($data['nim']);
-                            if(!$cek){
-                                array_push($upload_array, $arrmhs);
-                            }else {
-                                $msg = "<div class='alert alert-danger' role='alert'>".$data['nim']." sudah pernah mendapatkan beasiswa</div>";
-                                array_push($err_array, $msg);
-                            }
+                            $msg = "<div class='alert alert-danger' role='alert'>".$data['nim']." sudah pernah mendapatkan beasiswa</div>";
+                            array_push($err_array, $msg);
                         }
-                        
                     }
                     $numRow++;
                 }

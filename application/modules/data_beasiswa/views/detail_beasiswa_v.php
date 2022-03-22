@@ -43,7 +43,7 @@
                                           <strong>Jenis Beasiswa :</strong><br>
                                           <?= $detail_beasiswa['nama_jenis_beasiswa'] ?><br>
                                         <strong>Besar Bantuan / orang :</strong><br>
-                                          <?= ($detail_beasiswa['biaya'] ? 'Rp.'.number_format($mb['biaya'],2,',','.') : '')?>
+                                          <?= ($detail_beasiswa['biaya'] ? 'Rp.'.number_format($detail_beasiswa['biaya'],2,',','.') : '')?>
                                       </address>
                                     </div>
                                     <div class="col-md-6 text-md-right">
