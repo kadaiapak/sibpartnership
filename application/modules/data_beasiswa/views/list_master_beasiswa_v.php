@@ -11,7 +11,7 @@
             <h2 class="section-title">Detail Beasiswa</h2>
             <div class="row">
               <div class="col-lg-16 col-md-6 col-6 col-sm-6">
-            <p class="section-lead">Untuk upload penerima beasiswa, silahkan pilih detail beasiswanya terlebih dahulu, jangan sampai salah dalam memilih beasiswa dan melakukan proses upload</p>
+            <p class="section-lead">Untuk upload tes penerima beasiswa, silahkan pilih detail beasiswanya terlebih dahulu, jangan sampai salah dalam memilih beasiswa dan melakukan proses upload</p>
               </div>
             </div>
             <div class="row">
@@ -41,6 +41,7 @@
                         </tr>
                       </thead>
                       <tbody>
+                      
                         <?php $i = 1; ?>
                         <?php foreach ($master_beasiswa as $mb) : ?>
                             <tr>
@@ -48,7 +49,7 @@
                               <td><?= $mb['nama_beasiswa']; ?></td>
                               <td><?= $mb['kelompok_beasiswa']; ?></td>
                               <td><?= $mb['asal_beasiswa']; ?></td>
-                              <td><?= 'Rp.'.number_format($mb['biaya'],2,',','.') ?></td>
+                              <td><?= ($mb['biaya'] ? 'Rp.'.number_format($mb['biaya'],2,',','.') : '')?></td>
                               <td><?= $mb['periode']; ?></td>
                               <td><?= $mb['tahun']; ?></td>
                               <td>
