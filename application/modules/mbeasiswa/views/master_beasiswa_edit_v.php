@@ -209,6 +209,18 @@
                                             </div>
                                         </div>
 
+                                        <div class="form-group">
+                                            <div class="form-check">
+                                            <input type="hidden" name="is_validasi_fakultas" value="0" id="is_validasi_fakultas" />
+                                            <input class="form-check-input" <?= $master_beasiswa->validasi_fakultas == '1' ? "checked" : null; ?> 
+                                            type="checkbox" value="1" name="is_validasi_fakultas"  id="is_validasi_fakultas">
+                                            <label class="form-check-label" for="is_validasi_fakultas">
+                                                Validasi Oleh Fakultas ?
+                                            </label>
+                                            <div class="text-small text-muted mb-0">(ceklis jika Fakultas melakukan validasi) !</div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

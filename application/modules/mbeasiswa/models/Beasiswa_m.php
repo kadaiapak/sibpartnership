@@ -270,6 +270,7 @@ class Beasiswa_m extends CI_Model
         $params['buka_pendaftaran'] = $post['is_buka_pendaftaran'];
         $params['tampil'] = $post['is_show'];
         $params['aktif'] = $post['is_active'];
+        $params['validasi_fakultas'] = $post['is_validasi_fakultas'];
         $params['tgl_awal_pendaftaran'] = $post['tgl_awal_pendaftaran'];
         $params['tgl_tutup_pendaftaran'] = $post['tgl_tutup_pendaftaran'];
         $params['tgl_awal_penetapan'] = $post['tgl_awal_penetapan'];
@@ -303,6 +304,7 @@ class Beasiswa_m extends CI_Model
         $params['buka_pendaftaran'] = $post['is_buka_pendaftaran'];
         $params['aktif'] = $post['is_active'];
         $params['tampil'] = $post['is_show'];
+        $params['validasi_fakultas'] = $post['is_validasi_fakultas'];
         $params['updated_at'] = date('Y-m-d H:i:s');
 
         $this->db->where('id', $id);
