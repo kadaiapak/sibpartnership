@@ -56,6 +56,22 @@
                             </table>
                         </div>
                     </div>
+                    <div class="col-12 col-md-5 col-lg-5">
+                        <div class="card card-warning">
+                            <div class="card-header">
+                                <h4 style="font-size: 20px; color: #34395e;">Photo</h4>
+                            </div>
+                            <div class="card-body">
+                                    <div class="chocolat-parent">
+                                        <a href="https://cdn.unp.ac.id/portal/<?= $mahasiswa->nim_mahasiswa; ?>.jpg" class="chocolat-image" title="Just an example">
+                                            <div>
+                                                <img alt="image" src="https://cdn.unp.ac.id/portal/<?= $mahasiswa->nim_mahasiswa; ?>.jpg" class="img-fluid">
+                                            </div>
+                                        </a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row"  style="margin-top: -1rem; margin-bottom: 1rem;">
                     <div class="col-xl-2 col-md-2">

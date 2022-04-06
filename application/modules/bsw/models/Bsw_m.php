@@ -6,9 +6,15 @@ class Bsw_m extends CI_Model
     // var $column_order = array(null, 'nim_mahasiswa', 'nama_mahasiswa','mahasiswa_beasiswa.status_beasiswa','bukti_pembayaran_pribadi',null); //set column field database for datatable orderable
     // var $column_search = array('mahasiswa_beasiswa.nim_mahasiswa', 'mahasiswa.nama'); //set column field database for datatable searchable
     // var $order = array('nim_mahasiswa' => 'desc'); // default order 
-    var $column_order = array(null, 'nim_mahasiswa', 'nama_mahasiswa','mahasiswa_beasiswa.prodi','mahasiswa_beasiswa.fakultas',null); //set column field database for datatable orderable
+    var $column_order = array(null, 
+                                'nim_mahasiswa', 
+                                'nama_mahasiswa',
+                                'prodi',
+                                'fakultas',
+                                'status_beasiswa',
+                                null); //set column field database for datatable orderable
     var $column_search = array('nim_mahasiswa', 'nama_mahasiswa'); //set column field database for datatable searchable
-    var $order = array('nim_mahasiswa' => 'desc'); // default order 
+    var $order = array('nim_mahasiswa' => 'asc'); // default order 
 
 
     // @desc -memanggil semua data dari tabel mahasiswa beasiswa yang dijoin dengan tabel lain yang nantiknya

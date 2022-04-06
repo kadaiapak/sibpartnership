@@ -3,15 +3,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mhs_m extends CI_Model
 {
-    var $column_order = array(null, 'mahasiswa_beasiswa.nim_mahasiswa',
-                                     'mahasiswa_beasiswa.nama_mahasiswa',
-                                     'mahasiswa_beasiswa.prodi',
-                                     'mahasiswa_beasiswa.fakultas',
-                                     'mahasiswa_beasiswa.status_beasiswa',
-                                     'mahasiswa_beasiswa.tanggal_daftar',
-                                null); //set column field database for datatable orderable
-    var $column_search = array('mahasiswa_beasiswa.nim_mahasiswa','mahasiswa_beasiswa.nama_mahasiswa'); //set column field database for datatable searchable
-    var $order = array('mahasiswa_beasiswa.nim_mahasiswa' => 'desc'); // default order 
+    var $column_order = array(null,
+                                     'nim_mahasiswa',
+                                     'nama_mahasiswa',
+                                     'prodi',
+                                     'fakultas',
+                                ); //set column field database for datatable orderable
+    var $column_search = array('nim_mahasiswa'); //set column field database for datatable searchable
+    var $order = array('nim_mahasiswa' => 'desc'); // default order 
+
+    function get_datatables() 
+    {
+        $this->_get_datatables_query();
+        if(@$_POST['length'] != -1)
+        $this->db->limit(@$_POST['length'], @$_POST['start']);
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     private function _get_datatables_query()
     {
@@ -21,7 +29,7 @@ class Mhs_m extends CI_Model
         $this->db->or_where('status_beasiswa', '4' );
         $this->db->or_where('status_beasiswa', '5' );
         $i = 0;
-        
+    
         foreach ($this->column_search as $item) { // loop column 
             if(@$_POST['search']['value']) { // if datatable send POST for search
                 if($i===0) { // first loop
@@ -42,15 +50,6 @@ class Mhs_m extends CI_Model
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
-    }
-
-    function get_datatables() 
-    {
-        $this->_get_datatables_query();
-        if(@$_POST['length'] != -1)
-        $this->db->limit(@$_POST['length'], @$_POST['start']);
-        $query = $this->db->get();
-        return $query->result();
     }
 
     function count_filtered()
@@ -82,8 +81,6 @@ class Mhs_m extends CI_Model
             redirect('auth/oops');
         }
         return $query;
-       
-     
     }
 
     // @desc -digunakan untuk mendapatkan data beasiswa yang diterima mahasiswa sesuai dengan nim

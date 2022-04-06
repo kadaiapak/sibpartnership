@@ -20,7 +20,7 @@
                             </div>
                             
                             <div class="card-body">
-                                <a class="btn btn-primary btn-icon icon-left mb-2" href="<?= base_url('validasi/excel/'.$id); ?>"><i class="fa fa-file"></i> Download Excel</a>
+                                <a class="btn btn-primary btn-icon icon-left mb-2" href="<?= base_url('valfakultas/excel/'.$id); ?>"><i class="fa fa-file"></i> Download Excel</a>
 
                                 <div class="table-responsive">
                                     <table class="table table-striped" id="mahasiswa_validasi" style="width: 100%;">

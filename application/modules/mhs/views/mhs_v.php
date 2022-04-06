@@ -101,7 +101,6 @@
                                                 <th>Prodi</th>
                                                 <th>Fakulltas</th> 
                                                 <th>Status Daftar</th> 
-                                                <th>Tanggal Daftar</th> 
                                                 <th>Aksi</th>
                           </tr>
                         </thead>

@@ -36,7 +36,6 @@ class Mhs extends CI_Controller
             $row[] = $item->prodi;
             $row[] = $item->fakultas;
             $row[] = ($item->status_beasiswa == 3 ? '<span class="badge badge-success">Penerima Beasiswa</span>' : ($item->status_beasiswa == 4 ? '<span class="badge badge-danger">Dibatalkan</span>' : ($item->status_beasiswa == 5 ? '<span class="badge badge-warning">Selesai</span>' : null)));
-            $row[] = $item->tanggal_daftar;
             // $row[] = (is_null($item->id_beasiswa) ? '<span class="badge badge-danger">Pernah Menerima</span>' : '<span class="badge badge-success">Sedang Menerima</span>')  ;
             $row[] = '<a href="'.site_url('mhs/detail/'.$item->nim_mahasiswa).'" class="btn btn-primary btn-xs"><i class="fas fa-search-plus"></i> Detail</a>';
             $data[] = $row;

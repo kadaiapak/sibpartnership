@@ -20,9 +20,18 @@ class Valfakultas_m extends CI_Model
 
     private function _get_datatables_query($id)
     {
+
+         $id_beasiswa_admin = $this->fungsi->user_login()->role_id;
+        $this->db->select('nama_panjang_fakultas');
+        $this->db->from('fakultas');
+        $this->db->join('user_role', 'fakultas.id = user_role.id_fakultas');
+        $this->db->where('user_role.id', $id_beasiswa_admin);
+        $nama_fakultas = $this->db->get()->row()->nama_panjang_fakultas;
+
         $this->db->select('*');
         $this->db->from('mahasiswa_beasiswa');
         $this->db->where('id_beasiswa', $id);
+        $this->db->where('fakultas', $nama_fakultas);
         $this->db->group_start(); //this will start grouping
         $this->db->where('status_beasiswa', '0');
         $this->db->or_where('status_beasiswa', '1' );
@@ -87,6 +96,7 @@ class Valfakultas_m extends CI_Model
         $this->db->from('user_role');
         $this->db->where('id', $id_beasiswa_admin);
         $id_beasiswa = $this->db->get()->row()->id_beasiswa;
+       
         $this->db->select('mb.*, 
         nb.nama_beasiswa as nama_beasiswa, 
         kb.nama_kelompok as kelompok_beasiswa, 
@@ -137,7 +147,7 @@ class Valfakultas_m extends CI_Model
         $this->db->select('*');
         $this->db->from('mahasiswa_beasiswa');
         $this->db->where('id_beasiswa', $id_beasiswa);
-        $this->db->where('status_beasiswa', '1');
+        $this->db->where('status_beasiswa', '0');
         $query = $this->db->get();
 
         return $query;

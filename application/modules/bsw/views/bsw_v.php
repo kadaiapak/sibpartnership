@@ -48,7 +48,7 @@
                               <td><?= $mb['nama_beasiswa']; ?></td>
                               <td><?= $mb['kelompok_beasiswa']; ?></td>
                               <td><?= $mb['asal_beasiswa']; ?></td>
-                              <td><?= 'Rp.'.number_format($mb['biaya'],2,',','.') ?></td>
+                              <td><?= $mb['biaya'] ? 'Rp.'.number_format($mb['biaya'],2,',','.') : '' ; ?></td>
                               <td><?= $mb['periode']; ?></td>
                               <td><?= $mb['tahun']; ?></td>
                               <td>

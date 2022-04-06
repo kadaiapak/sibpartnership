@@ -90,6 +90,7 @@ class Penetapan_mahasiswa_m extends CI_Model
         $this->db->from('user_role');
         $this->db->where('id', $id_beasiswa_admin);
         $id_beasiswa = $this->db->get()->row()->id_beasiswa;
+         
         $this->db->select('mb.*, 
         nb.nama_beasiswa as nama_beasiswa, 
         kb.nama_kelompok as kelompok_beasiswa, 

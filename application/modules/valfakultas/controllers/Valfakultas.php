@@ -143,7 +143,7 @@ class Valfakultas extends CI_Controller
             ]
         ];
 
-        $sheet->setCellValue('A1', "DATA MAHASISWA YANG MENDAFTAR BEASISWA"); // Set kolom A1 dengan tulisan "DATA SISWA"
+        $sheet->setCellValue('A1', "DATA MAHASISWA YANG DIVALIDASI FAKULTAS"); // Set kolom A1 dengan tulisan "DATA SISWA"
         $sheet->mergeCells('A1:G1'); // Set Merge Cell pada kolom A1 sampai E1
         $sheet->getStyle('A1')->getFont()->setBold(true); // Set bold kolom A1
         // Buat header tabel nya pada baris ke 3
