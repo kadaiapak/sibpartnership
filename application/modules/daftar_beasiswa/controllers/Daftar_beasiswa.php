@@ -24,6 +24,10 @@ class Daftar_beasiswa extends CI_Controller
 
     public function daftar($id)
     {
+        $masterBeasiswa = $this->daftar->cekTanggalModel($id)->row();
+       
+        $validasi_fakultas = $masterBeasiswa->validasi_fakultas;
+        
         // cek apakah tanggal beasiswa masih buka
         $cekBisaDaftar = $this->cekBisaDaftar($id);
         if(!$cekBisaDaftar)
@@ -135,7 +139,7 @@ class Daftar_beasiswa extends CI_Controller
             }
             
             $post = $this->input->post(null, TRUE);
-            $this->daftar->prosesPendaftaranBeasiswa($post, $id, $upload);
+            $this->daftar->prosesPendaftaranBeasiswa($post, $id, $upload, $validasi_fakultas);
             if($this->db->affected_rows() > 0){
                 $this->session->set_flashdata("message", 
                     "Pendaftaran Beasiswa anda berhasil !");

@@ -35,6 +35,7 @@
                           <th>Role</th>
                           <th>Nama Asli</th>
                           <th>Akses Beasiswa</th>
+                          <th>Akses Fakultas</th>
                           <?php if($cek_akses_user['edit'] == '1' || $cek_akses_user['hapus'] == '1') { ?>
                           <th>Action</th>
                           <?php } ?>
@@ -49,6 +50,7 @@
                               <td><?= $r['role']; ?></td>
                               <td><?= $r['nama_panjang']; ?></td>
                               <td><?= $r['id_beasiswa'] == NULL ? 'Bukan Admin Beasiswa' : ($r['id_beasiswa'] == '0' ? 'Semua Beasiswa' : $r['nama_beasiswa']) ; ?></td>
+                              <td><?= $r['id_fakultas'] == NULL ? 'Bukan Admin Fakultas' : ($r['id_fakultas'] == '0' ? 'Semua Fakultas' : $r['nama_panjang_fakultas']) ; ?></td>
                               <?php if($cek_akses_user['edit'] == '1' || $cek_akses_user['hapus'] == '1') { ?>
                               <td>
                                 <?php if($cek_akses_user['edit'] == '1') { ?>
@@ -107,10 +109,22 @@
                           <select class="form-control" name="id_beasiswa" id="id_beasiswa">
                                 <option value=''>Pilih Akses Beasiswa</option>
                                 <option value='NULL'>Bukan Admin Beasiswa</option>
-                                <option value="0">Semua Beasiswa</option>
                                 <?php foreach ($nama_beasiswa as $nb) :?>
                                 <option value="<?= $nb['id']; ?>"><?= $nb['nama_beasiswa']; ?></option>
                                 <?php endforeach; ?>
+                                <option value="0">Semua Beasiswa</option>
+                          </select>
+                    </div>
+                    <div class="form-group">
+                          <label for="name">Pilih Fakultas :</label>
+                          <select class="form-control" name="id_fakultas" id="id_fakultas">
+                                <option value=''>Pilih Fakultas</option>
+                                <option value='NULL'>Bukan Admin Fakultas</option>
+                                <?php foreach ($nama_fakultas as $nf) :?>
+                                <option value="<?= $nf['id']; ?>"><?= $nf['nama_panjang_fakultas']; ?></option>
+                                <?php endforeach; ?>
+                                <option value="0">Semua Fakultas</option>
+
                           </select>
                     </div>
                   </div>
@@ -150,11 +164,23 @@
                     <div class="form-group">
                           <label for="name">Pilih Beasiswa :</label>
                           <select class="form-control" name="id_beasiswa" id="id_beasiswa">
-                                <option value="" selected>Beasiswa ...</option>
-                                <option value="0" <?= '0' == $r['id_beasiswa'] ? "selected" : ""; ?>>Bukan Admin Beasiswa</option>
+                                <option value="">Beasiswa ...</option>
+                                <option value="NULL" <?= NULL == $r['id_beasiswa'] ? "selected" : ""; ?>>Bukan Admin Beasiswa</option>
                                 <?php foreach ($nama_beasiswa as $nb) :?>
                                 <option value="<?= $nb['id']; ?>" <?= $nb['id'] == $r['id_beasiswa'] ? "selected" : ""; ?>><?= $nb['nama_beasiswa']; ?></option>
                                 <?php endforeach; ?>
+                                <option value="0" <?= '0' == $r['id_beasiswa'] ? "selected" : ""; ?>>Semua Beasiswa</option>
+                          </select>
+                    </div>
+                    <div class="form-group">
+                          <label for="name">Pilih Fakultas :</label>
+                          <select class="form-control" name="id_fakultas" id="id_fakultas">
+                                <option value="">Fakultas ...</option>
+                                <option value="NULL" <?= NULL == $r['id_fakultas'] ? "selected" : ""; ?>>Bukan Admin Fakultas</option>
+                                <?php foreach ($nama_fakultas as $fk) :?>
+                                <option value="<?= $fk['id']; ?>" <?= $fk['id'] == $r['id_fakultas'] ? "selected" : ""; ?>><?= $fk['nama_panjang_fakultas']; ?></option>
+                                <?php endforeach; ?>
+                                <option value="0" <?= '0' == $r['id_fakultas'] ? "selected" : ""; ?>>Semua Fakultas</option>
                           </select>
                     </div>
                   </div>

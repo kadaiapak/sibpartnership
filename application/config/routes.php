@@ -88,16 +88,16 @@ $route['validasi/detail-mahasiswa/(:num)/(:num)'] = 'validasi/detail_mahasiswa/$
 $route['validasi/(:any)/(:any)/calonkan'] = 'validasi/calonkan/$1/$2';
 $route['validasi/(:any)/(:any)/batalkan'] = 'validasi/batalkan/$1/$2';
 
+$route['valfakultas/detail-mahasiswa/(:num)/(:num)'] = 'valfakultas/detail_mahasiswa/$1/$2';
+$route['valfakultas/(:any)/(:any)/calonkan'] = 'valfakultas/calonkan/$1/$2';
+$route['valfakultas/(:any)/(:any)/batalkan'] = 'valfakultas/batalkan/$1/$2';
+
 $route['mpersyaratan/setup-persyaratan'] = 'mpersyaratan/setup_persyaratan';
 $route['mpersyaratan/setup-persyaratan/index/(:num)'] = 'mpersyaratan/setup_persyaratan';
 $route['mpersyaratan/setup-persyaratan/index'] = 'mpersyaratan/setup_persyaratan';
 $route['mpersyaratan/setup-persyaratan/tambahpersyaratan'] = 'mpersyaratan/setup_persyaratan/tambahpersyaratan';
 $route['mpersyaratan/setup-persyaratan/tambahpersyaratanWajib'] = 'mpersyaratan/setup_persyaratan/tambahpersyaratanWajib';
 $route['mpersyaratan/setup-persyaratan/edit/(:num)'] = 'mpersyaratan/setup_persyaratan/edit/$1';
-
-
-
-
 
 $route['default_controller'] = 'dashboard';
 $route['404_override'] = '';

@@ -11,6 +11,7 @@ class Akses extends CI_Controller
         $this->cek_akses_user = cek_akses_user();
         $this->load->model('Akses_m', 'akses');
         $this->load->model('mbeasiswa/Beasiswa_m', 'beasiswa');
+        $this->load->model('mfakultas/Mfakultas_m', 'mfakultas');
 
     }
 
@@ -63,9 +64,11 @@ class Akses extends CI_Controller
 
         // model ini digunakan untuk menambahkan admin beasiswa, contoh admin beasiswa a, admin beasiswa b
         $data['nama_beasiswa'] = $this->beasiswa->getNamaBeasiswa()->result_array();
+        $data['nama_fakultas'] = $this->mfakultas->getFakultas()->result_array();
         $this->form_validation->set_rules('role', 'Role', 'required');
         $this->form_validation->set_rules('nama_panjang', 'Nama Panjang', 'required');
         $this->form_validation->set_rules('id_beasiswa', 'Akses Beasiswa', 'required');
+        $this->form_validation->set_rules('id_fakultas', 'Fakultas', 'required');
        
         if($this->form_validation->run() == false){ 
             $data['isi'] = 'akses_v';
@@ -77,7 +80,8 @@ class Akses extends CI_Controller
             $data = [
                 'role' => $this->input->post('role'),
                 'nama_panjang' => $this->input->post('nama_panjang'),
-                'id_beasiswa' => $this->input->post('id_beasiswa') == 'NULL' ? null : $this->input->post('id_beasiswa')
+                'id_beasiswa' => $this->input->post('id_beasiswa') == 'NULL' ? null : $this->input->post('id_beasiswa'),
+                'id_fakultas' => $this->input->post('id_fakultas') == 'NULL' ? null : $this->input->post('id_fakultas')
             ];
             $this->akses->tambahRole($data);   
             if($this->db->affected_rows() > 0){

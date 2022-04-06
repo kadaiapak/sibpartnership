@@ -38,8 +38,11 @@ class Daftar_beasiswa_m extends CI_Model
     //         nantinya digunakan oleh mahasiswa untuk daftar beasiswa (show = 1)
     // @used by
     // - controller 'daftar-beasiswa/index'
-    public function prosesPendaftaranBeasiswa($post,$id, $upload)
+    public function prosesPendaftaranBeasiswa($post,$id, $upload, $validasi_fakultas)
     {
+        if($validasi_fakultas == '1'){
+            $status_beasiswa = '0';
+        }
         $data = array(
             'nim_mahasiswa' => $post['nim'],
             'tm_msk' => $post['tm_msk'],
@@ -54,7 +57,7 @@ class Daftar_beasiswa_m extends CI_Model
             'tgl_lhr' =>  $post['tgl_lhr'],
             'agama' =>  $post['agama'],
             'id_beasiswa' => $id,
-            'status_beasiswa' => '1',
+            'status_beasiswa' => $status_beasiswa,
             'tanggal_daftar' => date('Y-m-d H:i:s')
         );
         

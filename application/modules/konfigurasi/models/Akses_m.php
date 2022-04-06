@@ -29,9 +29,10 @@ class Akses_m extends CI_Model
     // - controller 'konfigurasi/akses/index'
     public function rolePagination($limit, $start)
     {
-        $this->db->select('ur.*, nb.nama_beasiswa');
+        $this->db->select('ur.*, nb.nama_beasiswa, fk.nama_panjang_fakultas');
         $this->db->from('user_role ur');
         $this->db->join('nama_beasiswa nb', 'ur.id_beasiswa = nb.id', 'left');
+        $this->db->join('fakultas fk', 'ur.id_fakultas = fk.id', 'left');
         $this->db->limit($limit, $start);
         $query = $this->db->get();
         return $query;

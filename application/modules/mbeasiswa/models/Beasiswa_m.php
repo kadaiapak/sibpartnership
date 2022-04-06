@@ -152,6 +152,8 @@ class Beasiswa_m extends CI_Model
         return $query;
     }
 
+    
+
     // @desc - tambah nama beasiswa
     // @used by
     // - controller 'mbeasiswa/Nama_beasiswa/index-tambah'
