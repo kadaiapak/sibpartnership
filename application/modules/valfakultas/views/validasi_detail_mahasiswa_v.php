@@ -73,23 +73,68 @@
                         </div>
                     </div>
                 </div>
-                <div class="row"  style="margin-top: -1rem; margin-bottom: 1rem;">
-                    <div class="col-xl-2 col-md-2">
-                        <?php if($mahasiswa->status_beasiswa == '0') { ?>
-                        <form action="<?= base_url('valfakultas/'.$mahasiswa->id_beasiswa.'/'.$mahasiswa->nim_mahasiswa.'/calonkan'); ?>" method="post" id="deleteFormTetapkanCalon" style="display: inline-block;">
-                            <button type="submit" class="btn btn-success btn-icon icon-left" id="deleteButtonTetapkanCalon"><i class="fas fa-file-upload"></i>Calonkan</button>
-                        </form>
-                        <?php } else{ ?>
-                        <form action="<?= base_url('valfakultas/'.$mahasiswa->id_beasiswa.'/'.$mahasiswa->nim_mahasiswa.'/batalkan'); ?>" method="post" id="deleteFormBatalkanCalon" style="display: inline-block;">
-                            <button type="submit" class="btn btn-danger btn-icon icon-left" id="deleteButtonBatalkanCalon"><i class="fas fa-check-square"></i>Batalkan Pencalonan</button>
-                        </form>
+                <div class="row">
+                    <div class="col-sm-12 col-md-7 col-lg-7">
+                        <div class="card card-warning">
+                            <div class="card-header" >
+                                <div class="row" style="width: 100%;" >
+                                    <div class="col-sm-12 col-md-3 col-lg-3">
+                                        <h4 style="color: #34395e; font-size: 16px; display: inline-block;">Status Pendaftar : </h4>
+                                    </div>
+                                    <div class="col-sm-12 col-md-5 col-lg-5">
+                                        <h4 style="color: #34395e; font-size: 14px;"><?= ($mahasiswa->status_beasiswa == '0' ? 'Menunggu Validasi Fakultas' : ($mahasiswa->status_beasiswa == '1' ? 'Sudah Divalidasi' : ($mahasiswa->status_beasiswa == '11' ? 'Pencalonan ditolak' : ''))); ?></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <?php if($comment) { ?>
+                                    <?php foreach ($comment as $cm) { ?>
+                                        <div class="form-group">
+                                            <label><?= $cm['user_comment']; ?></label>
+                                            <input type="text" class="form-control" readonly="" value="<?= $cm['isi']; ?>">
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-5 col-lg-5" >
+                        <div style="display: inline-block;">
+                            <?php if($mahasiswa->status_beasiswa == '0') { ?>
+                            <form action="<?= base_url('valfakultas/'.$mahasiswa->id_beasiswa.'/'.$mahasiswa->nim_mahasiswa.'/calonkan'); ?>" method="post" id="deleteFormTetapkanValFakultas" style="display: inline-block;">
+                                <button type="submit" class="btn btn-success btn-icon icon-left" id="deleteButtonTetapkanValFakultas"><i class="fas fa-file-upload"></i>Calonkan</button>
+                            </form>
+                            <?php } elseif($mahasiswa->status_beasiswa == '1') { ?>
+                            <form action="<?= base_url('valfakultas/'.$mahasiswa->id_beasiswa.'/'.$mahasiswa->nim_mahasiswa.'/batalkan'); ?>" method="post" id="deleteFormBatalkanValFakultas" style="display: inline-block;">
+                                <button type="submit" class="btn btn-warning btn-icon icon-left" id="deleteButtonBatalkanValFakultas"><i class="fas fa-check-square"></i>Batalkan Pencalonan</button>
+                            </form>
+                            <?php } else { ?>
+                                <?php null ?>
+                             <?php } ?>
+                        </div>
+                        
+                        <?php if($mahasiswa->status_beasiswa == '0' || $mahasiswa->status_beasiswa == '1') { ?>
+                        <div style="display: inline-block;">
+                            <button type="button" class="btn btn-danger btn-icon icon-left" data-toggle="modal" data-target="#tolakValidasiFakultasModal">
+                                <i class="fas fa-ban"></i>Tolak Pencalonan
+                            </button>
+                        </div>
+
+                        <?php } elseif ($mahasiswa->status_beasiswa == '11') { ?>
+                        <div style="display: inline-block;">
+                            <form action="<?= base_url('valfakultas/'.$mahasiswa->id_beasiswa.'/'.$mahasiswa->nim_mahasiswa.'/'.$mahasiswa->id.'/batalkanPenolakan'); ?>" method="post" id="deleteFormBatalkanPenolakanValFakultas" style="display: inline-block;">
+                                <button type="submit" class="btn btn-success btn-icon icon-left" id="deleteButtonBatalkanPenolakanValFakultas"><i class="fas fa-check-square"></i>Batalkan Penolakan</button>
+                            </form>
+                        </div>
                         <?php } ?>
 
-                    </div>
-                    <div class="col-xl-2 col-md-2">
-                        <a  href="<?= base_url('valfakultas/detail/'.$id_untuk_back); ?>" class="btn btn-danger btn-icon icon-left"><i class="fas fa-times"></i>Kembali</a>
+                        <div style="display: inline-block;">
+                            <a  href="<?= base_url('valfakultas/detail/'.$id_untuk_back); ?>" class="btn btn-primary btn-icon icon-left"><i class="fas fa-times"></i>Kembali</a>
+                        </div>
                     </div>
                 </div>
+               
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         <div class="card card-warning">
@@ -126,4 +171,30 @@
                 </div>
             </div>
         </section>
+        
+        <!-- modal untuk tambah data -->    
+        <div class="modal fade" id="tolakValidasiFakultasModal" tabindex="-1" role="dialog" aria-labelledby="tolakValidasiFakultasModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tolakValidasiFakultasModalLabel">Tuliskan alasan penolakan pendaftaran</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <form action="<?= base_url('valfakultas/'.$mahasiswa->id_beasiswa.'/'.$mahasiswa->nim_mahasiswa.'/'.$mahasiswa->id.'/tolak'); ?>" method="post" id="deleteFormTolakValFakultas" style="display: inline-block;">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <textarea style="resize: none; display: block; height: 200px;" class="form-control" id="isi_komen" name="isi_komen"rows="2" cols="10" placeholder="Alasan penolakan ..."></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="deleteButtonTolakValFakultas">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 </div>

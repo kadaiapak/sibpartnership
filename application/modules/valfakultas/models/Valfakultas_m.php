@@ -35,6 +35,7 @@ class Valfakultas_m extends CI_Model
         $this->db->group_start(); //this will start grouping
         $this->db->where('status_beasiswa', '0');
         $this->db->or_where('status_beasiswa', '1' );
+        $this->db->or_where('status_beasiswa', '11' );
         $this->db->group_end(); //this will end grouping
         $i = 0;
         
@@ -133,6 +134,7 @@ class Valfakultas_m extends CI_Model
         $this->db->group_start(); //this will start grouping
         $this->db->where('status_beasiswa', '0');
         $this->db->or_where('status_beasiswa', '1' );
+        $this->db->or_where('status_beasiswa', '11' );
         $this->db->group_end(); //this will end grouping
         $query = $this->db->get();
 
@@ -162,10 +164,19 @@ class Valfakultas_m extends CI_Model
         return $query;
     }
 
-     // @desc - ambil data mahasiswa yang sudah melakukan pendaftaran untuk diluluskan validasi
+    // @desc - ambil comment penolakan
     // @used by
-    // - controller 'validasi/calonkan'
-    public function calonkanBeasiswa($id=null, $nim = null)
+    // - controller 'validasi/detail_mahasiswa'
+    public function getComment($id_untuk_mencari_comment)
+    {
+        $query = $this->db->get_where('comment', array('id_mahasiswa_beasiswa' => $id_untuk_mencari_comment));
+        return $query;
+    }
+
+     // @desc - ambil data mahasiswa yang sudah melakukan pendaftaran untuk diluluskan validasi fakultas
+    // @used by
+    // - controller 'valfakultas/calonkan'
+    public function terimaValidasiFakultas($id=null, $nim = null)
     {
         $this->db->set('status_beasiswa', '1');
         $this->db->where('id_beasiswa', $id);
@@ -183,8 +194,8 @@ class Valfakultas_m extends CI_Model
 
     // @desc - ambil data mahasiswa yang sudah divalidasi untuk dibatalkan validasi kembali
     // @used by
-    // - controller 'validasi/batalkan'
-    public function batalkanBeasiswa($id=null, $nim = null)
+    // - controller 'valfakultas/batalkan'
+    public function batalkanValidasiFakultas($id=null, $nim = null)
     {
         $this->db->set('status_beasiswa', '0');
         $this->db->where('id_beasiswa', $id);
@@ -198,6 +209,55 @@ class Valfakultas_m extends CI_Model
             'tanggal' => date('Y-m-d H:i:s')
         );
         $this->db->insert('historis_beasiswa', $historis);
+    }
+
+    // @desc - ambil data mahasiswa yang mendaftar untuk ditolak status pendaftarannya karena sesuatu hal seperti kurang lengkap berkas
+    // @used by
+    // - controller 'valfakultas/batalkan'
+    public function tolakValidasiFakultas($id=null, $nim = null, $id_mahasiswa_beasiswa = null)
+    {
+        $this->db->set('status_beasiswa', '11');
+        $this->db->where('id_beasiswa', $id);
+        $this->db->where('nim_mahasiswa', $nim);
+        $this->db->update('mahasiswa_beasiswa');
+        $comment = array(
+            'id_mahasiswa_beasiswa' => $id_mahasiswa_beasiswa,
+            'user_comment' => $this->fungsi->user_login()->name,
+            'isi' => $this->input->post('isi_komen'),
+            'tanggal' => date('Y-m-d H:i:s'),
+            'status' => '0'
+        );
+        $historis = array(
+            'nim' => $nim,
+            'id_beasiswa' => $id,
+            'status_beasiswa' => '11',
+            'keterangan' => 'dibatalkan verifikasi data oleh fakultas',
+            'tanggal' => date('Y-m-d H:i:s')
+        );
+        $this->db->insert('historis_beasiswa', $historis);
+        $this->db->insert('comment', $comment);
+    }
+
+    // @desc - ambil data mahasiswa yang mendaftar untuk ditolak status pendaftarannya karena sesuatu hal seperti kurang lengkap berkas
+    // @used by
+    // - controller 'valfakultas/batalkan'
+    public function batalkanPenolakanValidasiFakultas($id=null, $nim = null, $id_untuk_hapus_comment = null)
+    {
+        $this->db->set('status_beasiswa', '0');
+        $this->db->where('id_beasiswa', $id);
+        $this->db->where('nim_mahasiswa', $nim);
+        $this->db->update('mahasiswa_beasiswa');
+
+        $this->db->where('id_mahasiswa_beasiswa', $id_untuk_hapus_comment);
+        $this->db->delete('comment');
+
+        $delete_status = array(
+            'nim' => $nim,
+            'id_beasiswa' => $id,
+            'status_beasiswa' => '11'
+        );
+        $this->db->where($delete_status);
+        $this->db->delete('historis_beasiswa');
     }
 }
 

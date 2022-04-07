@@ -91,6 +91,8 @@ $route['validasi/(:any)/(:any)/batalkan'] = 'validasi/batalkan/$1/$2';
 $route['valfakultas/detail-mahasiswa/(:num)/(:num)'] = 'valfakultas/detail_mahasiswa/$1/$2';
 $route['valfakultas/(:any)/(:any)/calonkan'] = 'valfakultas/calonkan/$1/$2';
 $route['valfakultas/(:any)/(:any)/batalkan'] = 'valfakultas/batalkan/$1/$2';
+$route['valfakultas/(:any)/(:any)/(:any)/tolak'] = 'valfakultas/tolak/$1/$2/$3';
+$route['valfakultas/(:any)/(:any)/(:any)/batalkanPenolakan'] = 'valfakultas/batalkanPenolakan/$1/$2/$3';
 
 $route['mpersyaratan/setup-persyaratan'] = 'mpersyaratan/setup_persyaratan';
 $route['mpersyaratan/setup-persyaratan/index/(:num)'] = 'mpersyaratan/setup_persyaratan';

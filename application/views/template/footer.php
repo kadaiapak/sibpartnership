@@ -237,6 +237,77 @@ $(document).on('click','#deleteButtonBatalkanDaftar',  function(e) {
 })
 
 // 
+
+// JQUERY TERPAKAI // _________________________________________________________________________________________________________________________
+$(document).on('click','#deleteButtonTetapkanValFakultas',  function(e) {
+  e.preventDefault();
+  swal({
+    title: "Terima Pengajuan Beasiswa?",
+    text: "Lolos Validasi Tahap Fakultas ",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      $('#deleteFormTetapkanValFakultas').submit();
+    } else {
+      swal("Proses dibatalkan");
+    }
+  });
+})
+
+
+$(document).on('click','#deleteButtonBatalkanValFakultas',  function(e) {
+  e.preventDefault();
+  swal({
+    title: "Batalkan Proses Validasi Fakultas untuk Mahasiswa ini?",
+    text: "Tidak jadi lolos tahap validasi fakultas",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      $('#deleteFormBatalkanValFakultas').submit();
+    } else {
+      swal("Proses dibatalkan");
+    }
+  });
+})
+
+$(document).on('click','#deleteButtonTolakValFakultas',  function(e) {
+  e.preventDefault();
+  swal({
+    title: "Tolak Proses Penaftaran untuk Mahasiswa ini?",
+    text: "Tidak jadi lolos tahap validasi fakultas",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      $('#deleteFormTolakValFakultas').submit();
+    } else {
+      swal("Proses dibatalkan");
+    }
+  });
+})
+
+$(document).on('click','#deleteButtonBatalkanPenolakanValFakultas',  function(e) {
+  e.preventDefault();
+  swal({
+    title: "Ajukan kembali pendaftaran mahasiswa ini?",
+    text: "Penolakan dibatalkan",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      $('#deleteFormBatalkanPenolakanValFakultas').submit();
+    } else {
+      swal("Proses dibatalkan");
+    }
+  });
+})
+
 $(document).on('click','#deleteButtonTetapkanCalon',  function(e) {
   e.preventDefault();
   swal({
@@ -270,6 +341,10 @@ $(document).on('click','#deleteButtonBatalkanCalon',  function(e) {
     }
   });
 })
+
+
+// AKHIR JQUERY TERPAKAI // ______________________________________________________________________________________________________________________________
+
 
 // $(document).on('click','#deleteButtonMasterBeasiswa',  function(e) {
 //   e.preventDefault();

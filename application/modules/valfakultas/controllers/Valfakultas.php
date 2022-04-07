@@ -28,7 +28,7 @@ class Valfakultas extends CI_Controller
             $row[] = $item->nama_mahasiswa;
             $row[] = $item->prodi;
             $row[] = $item->fakultas;
-            $row[] = ($item->status_beasiswa == 0 ? '<span class="badge badge-warning">Menunggu Validasi Fakultas</span>' : '<span class="badge badge-success">Sudah divalidasi fakultas</span>');
+            $row[] = ($item->status_beasiswa == 0 ? '<span class="badge badge-warning">Menunggu Validasi Fakultas</span>' : ($item->status_beasiswa == 11 ? '<span class="badge badge-danger">Validasi Ditolak</span>' : '<span class="badge badge-success">Sudah divalidasi fakultas</span>'));
             $row[] = $item->tanggal_daftar;
             $row[] = '<a href="'.site_url('valfakultas/detail-mahasiswa/'.$id.'/'.$item->nim_mahasiswa).'" class="btn btn-primary btn-xs"><i class="fas fa-search-plus"></i> Detail</a>
                       <form action="'. base_url('validasi-mahasiswa/hapus-mahasiswa').'" id="deleteForm" method="post" style="display: inline-block;">
@@ -53,9 +53,7 @@ class Valfakultas extends CI_Controller
     public function index()
     {
         $data['title'] = "validasi Mahasiswa Pendaftar Beasiswa";
-  
         $data['master_beasiswa'] = $this->valfakultas->getMasterBeasiswaValidasiFakultas()->result_array();
-        
         $data['isi'] = 'valfakultas_v';
         $this->load->view('template/wrapper_frontend_v', $data);
     }
@@ -65,7 +63,6 @@ class Valfakultas extends CI_Controller
         if($id == null){
             redirect('auth/oops');
         }
-
         $data['id'] = $id;
         $data['title'] = 'Daftar Mahasiswa Pendaftar';
       
@@ -76,6 +73,8 @@ class Valfakultas extends CI_Controller
     public function detail_mahasiswa($id, $nim)
     {
         $data['mahasiswa'] = $this->valfakultas->getMahasiswaPendaftar($id, $nim)->row();
+        $id_untuk_mencari_comment = $data['mahasiswa']->id; 
+        $data['comment'] = $this->valfakultas->getComment($id_untuk_mencari_comment)->result_array();
         $data['berkas_pendaftaran'] = $this->valfakultas->getBerkasPendaftaran($data['mahasiswa']->id)->result_array();
         $data['title'] = 'Tetapkan Mahasiswa';
         $data['id_untuk_back'] = $id;
@@ -91,12 +90,12 @@ class Valfakultas extends CI_Controller
         $this->load->view('template/wrapper_frontend_v', $data);
     }
 
-    // @desc - meluluskan mahasiswa dari proses validasi calon penerima beasiswa
+    // @desc - meluluskan mahasiswa dari proses validasi fakultas\
     // @used by
-    // - view 'validasi/validasi_detail_mahasiswa_v
+    // - view 'valfakultas/validasi_detail_mahasiswa_v
     function calonkan($id, $nim)
     {
-        $this->valfakultas->calonkanBeasiswa($id, $nim);
+        $this->valfakultas->terimaValidasiFakultas($id, $nim);
         if($this->db->affected_rows() > 0){
                 $this->session->set_flashdata("message", 
                     "validasi Berhasil");
@@ -105,6 +104,54 @@ class Valfakultas extends CI_Controller
         }
            
         redirect('valfakultas/detail/'.$id);
+    }
+
+    // @desc - membatalkan mahasiswa dari kelulusan proses validasi calon penerima beasiswa
+    // @used by
+    // - view 'valfakultas/validasi_detail_mahasiswa_v
+    function batalkan($id, $nim)
+    {
+        $this->valfakultas->batalkanValidasiFakultas($id, $nim);
+        if($this->db->affected_rows() > 0){
+                $this->session->set_flashdata("message", 
+                    "Pembatalan Validasi Berhasil");
+        }else {
+            $this->session->set_flashdata("gagal", "Pembatalan Validasi Gagal");
+        }
+           
+        redirect('valfakultas/detail/'.$id);
+    }
+
+    // @desc - reject pendaftaran mahasiswa karna beberapa hal seperti kurang lengkapnya dokumen
+    // @used by
+    // - view 'valfakultas/validasi_detail_mahasiswa_v
+    function tolak($id, $nim, $id_mahasiswa_beasiswa)
+    {
+        $this->valfakultas->tolakValidasiFakultas($id, $nim, $id_mahasiswa_beasiswa);
+        if($this->db->affected_rows() > 0){
+                $this->session->set_flashdata("message", 
+                    "Pendaftaran Mahasiswa ditolak");
+        }else {
+            $this->session->set_flashdata("gagal", "Pembatalan Validasi Gagal");
+        }
+           
+        redirect('valfakultas/detail-mahasiswa/'.$id.'/'.$nim, 'refresh');
+    }
+
+     // @desc - ajukan kembali pendaftaran mahasiswa
+    // @used by
+    // - view 'valfakultas/validasi_detail_mahasiswa_v
+    function batalkanPenolakan($id, $nim, $id_untuk_hapus_comment)
+    {
+        $this->valfakultas->batalkanPenolakanValidasiFakultas($id, $nim, $id_untuk_hapus_comment);
+        if($this->db->affected_rows() > 0){
+                $this->session->set_flashdata("message", 
+                    "Daftarkan kembali pencalonan mahasiswa");
+        }else {
+            $this->session->set_flashdata("gagal", "Pembatalan Validasi Gagal");
+        }
+           
+        redirect('valfakultas/detail-mahasiswa/'.$id.'/'.$nim, 'refresh');
     }
 
     // @desc - membuat fitur export excel
@@ -143,17 +190,18 @@ class Valfakultas extends CI_Controller
             ]
         ];
 
-        $sheet->setCellValue('A1', "DATA MAHASISWA YANG DIVALIDASI FAKULTAS"); // Set kolom A1 dengan tulisan "DATA SISWA"
-        $sheet->mergeCells('A1:G1'); // Set Merge Cell pada kolom A1 sampai E1
+        $sheet->setCellValue('A1', "DATA MAHASISWA YANG DIVALIDASI FAKULTAS"); // Set kolom A1 dengan tulisan "DATA MAHASISWA YANG DIVALIDASI FAKULTAS"
+        $sheet->mergeCells('A1:H1'); // Set Merge Cell pada kolom A1 sampai G1
         $sheet->getStyle('A1')->getFont()->setBold(true); // Set bold kolom A1
         // Buat header tabel nya pada baris ke 3
         $sheet->setCellValue('A3', "NO"); // Set kolom A3 dengan tulisan "NO"
-        $sheet->setCellValue('B3', "NIM"); // Set kolom B3 dengan tulisan "NIS"
+        $sheet->setCellValue('B3', "NIM"); // Set kolom B3 dengan tulisan "NIM"
         $sheet->setCellValue('C3', "NAMA"); // Set kolom C3 dengan tulisan "NAMA"
-        $sheet->setCellValue('D3', "PRODI"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
-        $sheet->setCellValue('E3', "FAKULTAS"); // Set kolom E3 dengan tulisan "ALAMAT"
-        $sheet->setCellValue('F3', "JP"); // Set kolom E3 dengan tulisan "ALAMAT"
-        $sheet->setCellValue('G3', "IPK"); // Set kolom E3 dengan tulisan "ALAMAT"
+        $sheet->setCellValue('D3', "PRODI"); // Set kolom D3 dengan tulisan "PRODI"
+        $sheet->setCellValue('E3', "FAKULTAS"); // Set kolom E3 dengan tulisan "FAKULTAS"
+        $sheet->setCellValue('F3', "JP"); // Set kolom E3 dengan tulisan "JENJANG PENDIDIKAN"
+        $sheet->setCellValue('G3', "IPK"); // Set kolom E3 dengan tulisan "IPK"
+        $sheet->setCellValue('H3', "STATUS"); // Set kolom E3 dengan tulisan "IPK"
         // Apply style header yang telah kita buat tadi ke masing-masing kolom header
         $sheet->getStyle('A3')->applyFromArray($style_col);
         $sheet->getStyle('B3')->applyFromArray($style_col);
@@ -162,6 +210,7 @@ class Valfakultas extends CI_Controller
         $sheet->getStyle('E3')->applyFromArray($style_col);
         $sheet->getStyle('F3')->applyFromArray($style_col);
         $sheet->getStyle('G3')->applyFromArray($style_col);
+        $sheet->getStyle('H3')->applyFromArray($style_col);
 
 
         $no = 1; // Untuk penomoran tabel, di awal set dengan 1
@@ -173,7 +222,12 @@ class Valfakultas extends CI_Controller
             $sheet->setCellValue('D'.$numrow, $mhs['prodi']);
             $sheet->setCellValue('E'.$numrow, $mhs['fakultas']);
             $sheet->setCellValue('F'.$numrow, $mhs['jjp']);
-            $sheet->setCellValue('F'.$numrow, $mhs['ipk']);
+            $sheet->setCellValue('G'.$numrow, $mhs['ipk']);
+            if($mhs['status_beasiswa'] == 0){
+                $sheet->setCellValue('H'.$numrow, 'Menunggu Validasi');
+            }else {
+                $sheet->setCellValue('H'.$numrow, 'Sudah Validasi');
+            }
             
             // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
             $sheet->getStyle('A'.$numrow)->applyFromArray($style_row);
@@ -183,6 +237,7 @@ class Valfakultas extends CI_Controller
             $sheet->getStyle('E'.$numrow)->applyFromArray($style_row);
             $sheet->getStyle('F'.$numrow)->applyFromArray($style_row);
             $sheet->getStyle('G'.$numrow)->applyFromArray($style_row);
+            $sheet->getStyle('H'.$numrow)->applyFromArray($style_row);
             
             $no++; // Tambah 1 setiap kali looping
             $numrow++; // Tambah 1 setiap kali looping
@@ -196,6 +251,7 @@ class Valfakultas extends CI_Controller
         $sheet->getColumnDimension('E')->setWidth(30); // Set width kolom E
         $sheet->getColumnDimension('F')->setWidth(8); // Set width kolom E
         $sheet->getColumnDimension('G')->setWidth(8); // Set width kolom E
+        $sheet->getColumnDimension('H')->setWidth(8); // Set width kolom E
 
         // Set height semua kolom menjadi auto (mengikuti height isi dari kolommnya, jadi otomatis)
         $sheet->getDefaultRowDimension()->setRowHeight(-1);
@@ -262,21 +318,7 @@ class Valfakultas extends CI_Controller
         // exit;
     }
 
-    // @desc - membatalkan mahasiswa dari kelulusan proses validasi calon penerima beasiswa
-    // @used by
-    // - view 'validasi/validasi_detail_mahasiswa_v
-    function batalkan($id, $nim)
-    {
-        $this->valfakultas->batalkanBeasiswa($id, $nim);
-        if($this->db->affected_rows() > 0){
-                $this->session->set_flashdata("message", 
-                    "Pembatalan Validasi Berhasil");
-        }else {
-            $this->session->set_flashdata("gagal", "Pembatalan Validasi Gagal");
-        }
-           
-        redirect('valfakultas/detail/'.$id);
-    }
+    
 
      private function getmhsaktifapis($nim,$sem)
     {
