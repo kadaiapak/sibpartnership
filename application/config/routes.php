@@ -101,6 +101,11 @@ $route['mpersyaratan/setup-persyaratan/tambahpersyaratan'] = 'mpersyaratan/setup
 $route['mpersyaratan/setup-persyaratan/tambahpersyaratanWajib'] = 'mpersyaratan/setup_persyaratan/tambahpersyaratanWajib';
 $route['mpersyaratan/setup-persyaratan/edit/(:num)'] = 'mpersyaratan/setup_persyaratan/edit/$1';
 
+$route['panduan-pendaftaran'] = 'panduan_pendaftaran';
+
+$route['status-pendaftaran'] = 'status_pendaftaran';
+$route['status-pendaftaran/index'] = 'status_pendaftaran/index';
+
 $route['default_controller'] = 'dashboard';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
