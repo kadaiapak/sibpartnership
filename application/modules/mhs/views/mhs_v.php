@@ -92,7 +92,7 @@
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table class="table table-striped" id="data_penerima" style="width: 100%;">
+                      <table class="table table-striped" id="mhs_list_penerima" style="width: 100%;">
                         <thead>
                           <tr>
                             <th class="text-center">No</th>
@@ -122,7 +122,7 @@
     <script>
      
 $(document).ready(function() {   
-          $('#data_penerima').DataTable({
+          $('#mhs_list_penerima').DataTable({
             "processing": true,
             "serverSide": true,
 
@@ -133,7 +133,7 @@ $(document).ready(function() {
 
             "columnDefs": [
               {
-                "targets": [0,5,6],
+                "targets": [0],
                 "orderable": false,
             }],
             "order" : []
