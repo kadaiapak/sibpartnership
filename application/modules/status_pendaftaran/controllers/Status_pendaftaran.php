@@ -55,7 +55,7 @@ class Status_pendaftaran extends CI_Controller
         $data['start_at'] = $this->uri->segment(3);
         // END OF PAGINATION
         $data['title'] = "Status Pendaftaran Beasiswa";
-        $data['master_beasiswa'] = $this->status_pendaftaran->getMasterBeasiswaWhere($config['per_page'],$data['start_at'])->result_array();
+        $data['master_beasiswa'] = $this->status_pendaftaran->getMahasiswaBeasiswaJoinMasterBeasiswaWhere($config['per_page'],$data['start_at'], $nim)->result_array();
         $data['isi'] = 'status_pendaftaran_v';
         $this->load->view('template/wrapper_frontend_v', $data);
     }
@@ -65,55 +65,18 @@ class Status_pendaftaran extends CI_Controller
         if(!$id){
             redirect('auth/oops');
         }
-        $data['title'] = "Detail Beasiswa";
-
-        $data['detail_beasiswa'] = $this->penerima->getDetailBeasiswa($id);
-        $data['sk'] = $this->penerima->getMasterSk($data['detail_beasiswa']['id'])->result_array();
-        $data['bp'] = $this->penerima->getMasterBP($data['detail_beasiswa']['id'])->result_array();
-
-        $data['periode'] = $this->pbeasiswa->getPeriodeBeasiswa()->result_array();
-        $data['total_penerima'] = $this->penerima->getTotalPenerimaDetailBeasiswa($id);
-        $data['isi'] = 'detail_bsw_v';
+        $data['title'] = "Detail Status Pendaftaran";
+        $data['mahasiswa'] = $this->status_pendaftaran->getDetailBeasiswaMahasiswa($id)->row();
+        if($data['mahasiswa'] == null){
+            redirect('auth/oops');
+        }
+        if($this->fungsi->user_login()->username != $data['mahasiswa']->nim_mahasiswa)
+        {
+            redirect('auth/blocked');
+        }
+        $data['comment'] = $this->status_pendaftaran->getComment($id)->result_array();
+        $data['berkas_pendaftaran'] = $this->status_pendaftaran->getBerkasPendaftaran($data['mahasiswa']->id)->result_array();
+        $data['isi'] = 'status_pendaftaran_detail_v';
         $this->load->view('template/wrapper_frontend_v', $data);  
-    }
-
- 
-    public function detail_mahasiswa_penerima($id_beasiswa, $nim)
-    {
-        $data['title'] = "Detail Mahasiswa";
-        $data['mahasiswa'] = $this->penerima->getMahasiswaPenerimaBeasiswa($id_beasiswa, $nim)->row();
-        $data['periode'] = $this->pbeasiswa->getPeriodeBeasiswa()->result_array();
-        $data['bp'] = $this->penerima->getBuktiPembayaran($id_beasiswa, $nim)->result_array();
-        
-        $data['isi'] = 'detail_mahasiswa_bsw_v';
-        $this->load->view('template/wrapper_frontend_v', $data);  
-    }
-
-    // @desc - untuk print 
-    // @used by
-    //  - view 'detail_beasiswa_v'
-    public function pdf()
-    {
-        $id = $this->input->post('id_beasiswa');
-        $data['nama_beasiswa'] = $this->input->post('nama_beasiswa');
-        $data['periode'] = $this->input->post('periode');
-        $data['tahun'] = $this->input->post('tahun');
-         $this->load->library('pdfgenerator');
-        $data['master_beasiswa'] = $this->pbeasiswa->getPenerimaBeasiswa($id)->result_array();
-
-        // title dari pdf
-        $data['title_pdf'] = 'Laporan Penerima Beasiswa';
-        
-        // filename dari pdf ketika didownload
-        $file_pdf = 'laporan_penerima_beasiswa';
-        // setting paper
-        $paper = 'A4';
-        //orientasi paper potrait / landscape
-        $orientation = "landscape";
-        
-		$html = $this->load->view('laporan_pdf',$data, true);	    
-        
-        // run dompdf
-        $this->pdfgenerator->generate($html, $file_pdf,$paper,$orientation);
     }
 } 

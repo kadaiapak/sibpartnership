@@ -14,7 +14,7 @@ class Validasi extends CI_Controller
         $this->load->model('Validasi_m', 'validasi');
     }
 
-     public function get_ajax($id) 
+    public function get_ajax($id) 
     {
        
         $list = $this->validasi->get_datatables($id);

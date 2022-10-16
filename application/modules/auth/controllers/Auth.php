@@ -87,6 +87,13 @@ class Auth extends CI_Controller
         $this->load->view('template/auth_header', $data);
         $this->load->view('auth/oops', $data);
         $this->load->view('template/auth_footer');
+    }
 
+    public function connection()
+    {
+        $data['title'] = 'Connection Problem!';
+        $this->load->view('template/auth_header', $data);
+        $this->load->view('auth/connection', $data);
+        $this->load->view('template/auth_footer');
     }
 }

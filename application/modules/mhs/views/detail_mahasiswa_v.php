@@ -78,9 +78,9 @@
                                     </div>
                                 <?php }else { ?> -->
                                     <div class="chocolat-parent">
-                                        <a href="<?= base_url(); ?>template/assets/img/no-photo.jpg" class="chocolat-image" title="Just an example">
+                                        <a href="https://cdn.unp.ac.id/portal/<?= $mahasiswa['nim'] ?>" class="chocolat-image" title="Just an example">
                                             <div>
-                                                <img alt="image" src="<?= base_url(); ?>template/assets/img/no-photo.jpg" class="img-fluid">
+                                                <img alt="image" src="https://cdn.unp.ac.id/portal/<?= $mahasiswa['nim'] ?>" class="img-fluid">
                                             </div>
                                         </a>
                                     </div>

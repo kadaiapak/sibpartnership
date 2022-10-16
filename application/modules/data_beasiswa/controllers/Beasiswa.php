@@ -125,7 +125,6 @@ class Beasiswa extends CI_Controller
         $data['bp'] = $this->penerima->getMasterBP($data['detail_beasiswa']['id'])->result_array();
         $data['periode'] = $this->pbeasiswa->getPeriodeBeasiswa()->result_array();
         $data['total_penerima'] = $this->penerima->getTotalPenerimaDetailBeasiswa($id);
-        
         $this->load->view('template/wrapper_frontend_v', $data);
     }
 

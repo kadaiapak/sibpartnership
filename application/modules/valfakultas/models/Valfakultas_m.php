@@ -157,7 +157,7 @@ class Valfakultas_m extends CI_Model
 
     // @desc - ambil berkas pendaftaran mahasiswa
     // @used by
-    // - controller 'validasi/detail_mahasiswa'
+    // - controller 'valfakultas/detail_mahasiswa'
     public function getBerkasPendaftaran($id)
     {
         $query = $this->db->get_where('file_mahasiswa_daftar_beasiswa', array('id_mahasiswa_daftar_beasiswa' => $id));

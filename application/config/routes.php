@@ -58,6 +58,22 @@ $route['daftar-beasiswa'] = 'daftar_beasiswa';
 $route['daftar-beasiswa/daftar'] = 'daftar_beasiswa/daftar';
 $route['daftar-beasiswa/daftar/(:any)'] = 'daftar_beasiswa/daftar/$1';
 
+// untuk coba coba
+$route['daftar-beasiswa-admin'] = 'daftar_beasiswa_admin';
+$route['daftar-beasiswa-admin/pdf'] = 'daftar_beasiswa_admin/pdf';
+$route['daftar-beasiswa-admin/detail/(:any)'] = 'daftar_beasiswa_admin/detail/$1';
+$route['daftar-beasiswa-admin/input-data/(:any)'] = 'daftar_beasiswa_admin/input_data/$1';
+$route['daftar-beasiswa-admin/daftar/(:any)'] = 'daftar_beasiswa_admin/daftar/$1';
+$route['daftar-beasiswa-admin/get_ajax/(:any)/(:any)'] = 'daftar_beasiswa_admin/get_ajax/$1/$2';
+$route['daftar-beasiswa-admin/detail-mahasiswa/(:any)/(:any)'] = 'daftar_beasiswa_admin/detail_mahasiswa/$1/$2';
+
+$route['daftar-beasiswa-admin/hapus'] = 'daftar_beasiswa_admin/hapus';
+
+$route['daftar-beasiswa-admin/list-mahasiswa/(:any)'] = 'daftar_beasiswa_admin/list_mahasiswa/$1';
+
+
+// akhir untuk coba coba
+
 
 // routes untuk edit profile
 $route['akun/edit-profile'] = 'akun/edit_profile';
@@ -105,7 +121,12 @@ $route['panduan-pendaftaran'] = 'panduan_pendaftaran';
 
 $route['status-pendaftaran'] = 'status_pendaftaran';
 $route['status-pendaftaran/index'] = 'status_pendaftaran/index';
+$route['status-pendaftaran/detail/(:num)'] = 'status_pendaftaran/detail/$1';
 
-$route['default_controller'] = 'dashboard';
+$route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+$route['api/demo'] = 'api/ApiDemoController/index';
+$route['api/users'] = 'api/ApiUsersController/index';
+$route['api/daftar-beasiswa'] = 'api/ApiDaftarBeasiswaController/index';

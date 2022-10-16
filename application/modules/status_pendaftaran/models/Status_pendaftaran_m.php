@@ -3,84 +3,72 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Status_pendaftaran_m extends CI_Model
 {
-    // @desc - ambil data semua master beasiswa yang boleh di tampilkan (show = 1)
+    // @desc - ambil data status pendaftaran
     // @used by
-    // - controller 'bsw/index'
-    public function getMasterBeasiswaWhere($limit, $start)
+    // - controller 'status_pendaftaran/index'
+    public function getMahasiswaBeasiswaJoinMasterBeasiswaWhere($limit, $start, $nim)
     {
-        $this->db->select('mb.*, mahasiswa_beasiswa.* 
-        nb.nama_beasiswa as nama_beasiswa, 
-        kb.nama_kelompok as kelompok_beasiswa, 
-        ab.nama_asal_beasiswa as asal_beasiswa, 
-        jb.nama_jenis as jenis_beasiswa, 
-        p.nama as periode');
-        $this->db->from('master_beasiswa mb');
-        $this->db->join('nama_beasiswa nb', 'nb.id = mb.nama_beasiswa', 'left');
-        $this->db->join('kelompok_beasiswa kb', 'kb.id = mb.kelompok_beasiswa','left');
-        $this->db->join('jenis_beasiswa jb', 'jb.id = mb.jenis_beasiswa','left');
-        $this->db->join('asal_beasiswa ab', 'ab.id = mb.asal_beasiswa','left');
-        $this->db->join('periode p', 'p.id = mb.periode','left');
-        $this->db->join('mahasiswa_beasiswa', 'mahasiswa_beasiswa.id_beasiswa');
-        $this->db->where('tampil', '1');
-        $this->db->order_by("id", "desc");
+        $this->db->select('mahabe.id as id_mahasiswa_beasiswa, mahabe.nama_mahasiswa as nama_mahasiswa, mahabe.status_beasiswa as status_beasiswa, mahabe.tanggal_daftar,
+        nabe.nama_beasiswa, 
+        per.nama as nama_periode, 
+        masterb.tahun as tahun');
+        $this->db->from('mahasiswa_beasiswa mahabe');
+        $this->db->join('master_beasiswa masterb', 'mahabe.id_beasiswa = masterb.id');
+        $this->db->join('nama_beasiswa nabe', 'masterb.nama_beasiswa = nabe.id');
+        $this->db->join('periode per','masterb.periode = per.id');
+        $this->db->where('mahabe.nim_mahasiswa', $nim);
+        $this->db->order_by("mahabe.id", "desc");
         $this->db->limit($limit, $start);
         $query = $this->db->get();
         return $query;
     }
 
-    // @desc -digunakan untuk menghitung semua master untuk pagination
+    // @desc - ambil data status pendaftaran
     // @used by
-    // - controllers 'bsw/index'
-    public function countMasterBeasiswaYangDiDaftar($nim)
+    // - controller 'status_pendaftaran/index'
+    public function getDetailBeasiswaMahasiswa($id)
     {
-        $this->db->where('nim_mahasiswa', $nim);
-        $query =  $this->db->count_all_results('mahasiswa_beasiswa');
+        $this->db->select('mahabe.*,
+        nabe.nama_beasiswa, 
+        per.nama as nama_periode, 
+        masterb.tahun as tahun');
+        $this->db->from('mahasiswa_beasiswa mahabe');
+        $this->db->join('master_beasiswa masterb', 'mahabe.id_beasiswa = masterb.id');
+        $this->db->join('nama_beasiswa nabe', 'masterb.nama_beasiswa = nabe.id');
+        $this->db->join('periode per','masterb.periode = per.id');
+        $this->db->where('mahabe.id', $id);
+        $this->db->order_by("mahabe.id", "desc");
+        $query = $this->db->get();
         return $query;
     }
 
-    public function uploadSk($post)
+    // @desc - ambil comment
+    // @used by
+    // - controller 'status_pendaftaran/detail/$id'
+    public function getComment($id)
     {
-        $id = $this->input->post('id');
-        $this->db->set('sk', $post['sk']);
-        $this->db->where('id', $id);
-        $this->db->update('master_beasiswa');
+        $query = $this->db->get_where('comment', array('id_mahasiswa_beasiswa' => $id));
+        return $query;
     }
-        public function import_data($upload_array, $id)
-        {
-            foreach ($upload_array as $ur) {
-                $mahasiswa = array(
-                    'nim' => $ur
-                );
-                $mahasiswaBeasiswa = array(
-                    'nim_mahasiswa' => $ur,
-                    'id_beasiswa' => $id
-                );
-                $query = $this->db->get_where('mahasiswa', $mahasiswa);
-                if($query->num_rows() == 0){
-                    $this->db->insert('mahasiswa', $mahasiswa);   
-                }
-                $this->db->insert('mahasiswa_beasiswa', $mahasiswaBeasiswa);             
-            }
-        }
 
-        public function cekBeasiswa($nim)
-        {
-            $cek = array(
-                'nim_mahasiswa' => $nim
-            );
-            $query = $this->db->get_where('mahasiswa_beasiswa', $cek);
-            if($query->num_rows() > 0){
-                return true;
-            }
-            return false;
-        }
+    // @desc - digunakan untuk menghitung semua master untuk pagination
+    // @used by
+    // - controllers 'status_pendaftaran/index'
+    public function countMasterBeasiswaYangDiDaftar($nim)
+    {
+         $this->db->where('nim_mahasiswa', $nim);
+         $query =  $this->db->count_all_results('mahasiswa_beasiswa');
+         return $query;
+    }
 
-        public function hapusPenerimaBeasiswa($nim)
-        {
-            $this->db->where('nim_mahasiswa', $nim);
-            $this->db->delete('mahasiswa_beasiswa');
-            
-        }
+    // @desc - ambil berkas pendaftaran mahasiswa
+    // @used by
+    // - controller 'status_pendaftaran/detail'
+    public function getBerkasPendaftaran($id)
+    {
+        $query = $this->db->get_where('file_mahasiswa_daftar_beasiswa', array('id_mahasiswa_daftar_beasiswa' => $id));
+        return $query;
+    }
 }
 
 ?>
