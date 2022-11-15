@@ -24,20 +24,18 @@ class Daftar_beasiswa_admin_m extends CI_Model
         $user_id = $this->session->userdata('userid');
         $this->db->select('mahasiswa_beasiswa.*, user.name');
         $this->db->from('mahasiswa_beasiswa');
-        $this->db->join('user', 'mahasiswa_beasiswa.created_by = user.id', 'left');
+        $this->db->join('user', 'mahasiswa_beasiswa.admin_pendaftar = user.id', 'left');
         $this->db->where('id_beasiswa', $id);
         if($display == 'all') {
             $this->db->group_start(); //this will start grouping
             $this->db->where('status_beasiswa', '0');
-            $this->db->where('status_beasiswa', '0b');
             $this->db->or_where('status_beasiswa', '1' );
-            $this->db->or_where('status_beasiswa', '1b' );
             $this->db->group_end(); //this will end grouping
         } elseif ($display == 'half') {
-            $this->db->where('created_by', $user_id);
+            $this->db->where('admin_pendaftar', $user_id);
             $this->db->group_start(); //this will start grouping
-            $this->db->where('status_beasiswa', '0b');
-            $this->db->or_where('status_beasiswa', '1b' );
+            $this->db->where('status_beasiswa', '0');
+            $this->db->or_where('status_beasiswa', '1' );
             $this->db->group_end(); //this will end grouping
         }
         $i = 0;
@@ -125,9 +123,10 @@ class Daftar_beasiswa_admin_m extends CI_Model
      // @desc - print data mahasiswa yang didaftarkan beasiswa oleh admin
     // @used by
     // - controller 'daftar-beasiswa-admin/pdf($id)
-    public function getPenerimaBeasiswa($id = null)
+    // - controller 'daftar-beasiswa-admin/excel($id)
+    public function getPendaftarBeasiswa($id = null)
     {
-        $this->db->select('mabe.*,mb.*, 
+        $this->db->select('mabe.*, 
                             nb.nama_beasiswa as nama_beasiswa, 
                             kb.nama_kelompok as kelompok_beasiswa, 
                             ab.nama_asal_beasiswa as asal_beasiswa, 
@@ -135,7 +134,7 @@ class Daftar_beasiswa_admin_m extends CI_Model
                             user.name as admin_pendaftar');
         $this->db->from('mahasiswa_beasiswa mabe');
         $this->db->join('master_beasiswa mb', 'mabe.id_beasiswa = mb.id');
-        $this->db->join('user', 'mabe.created_by = user.id', 'left');
+        $this->db->join('user', 'mabe.admin_pendaftar = user.id', 'left');
         $this->db->join('nama_beasiswa nb', 'nb.id = mb.nama_beasiswa');
         $this->db->join('kelompok_beasiswa kb', 'kb.id = mb.kelompok_beasiswa');
         $this->db->join('asal_beasiswa ab', 'ab.id = mb.asal_beasiswa');
@@ -145,9 +144,7 @@ class Daftar_beasiswa_admin_m extends CI_Model
         }
         $this->db->group_start();
         $this->db->where('status_beasiswa', '0');
-        $this->db->or_where('status_beasiswa', '0b');
         $this->db->or_where('status_beasiswa', '1');
-        $this->db->or_where('status_beasiswa', '1b');
         $this->db->group_end();
         $query = $this->db->get();
         return $query;
@@ -160,10 +157,13 @@ class Daftar_beasiswa_admin_m extends CI_Model
     public function prosesPendaftaranBeasiswaOlehAdmin($post, $id, $upload, $validasi_fakultas)
     {
         $id_user = $this->session->userdata('userid');
+        // jika beasiswa tersebut harus divalidasi fakultas
         if($validasi_fakultas == '1'){
-            $status_beasiswa = '0b';
+            // jadikan status beasiswa nya jadi 0 ( harus divalidasi fakultas dahulu)
+            $status_beasiswa = '0';
         }else {
-            $status_beasiswa = '1b';
+            // jika tidak jadikan status beasiswanya jadi 1 (yaitu langsung di validasi oleh admin beasiswa unp)
+            $status_beasiswa = '1';
         }
         $data = array(
             'nim_mahasiswa' => $post['nim'],
@@ -180,7 +180,7 @@ class Daftar_beasiswa_admin_m extends CI_Model
             'agama' =>  $post['agama'],
             'id_beasiswa' => $id,
             'status_beasiswa' => $status_beasiswa,
-            'created_by' => $id_user,
+            'admin_pendaftar' => $id_user,
             'tanggal_daftar' => date('Y-m-d H:i:s')
         );
         
@@ -289,12 +289,12 @@ class Daftar_beasiswa_admin_m extends CI_Model
     {
         $this->db->select('mahasiswa_beasiswa.*, user.name as admin_yang_mendaftarkan');
         $this->db->from('mahasiswa_beasiswa');
-        $this->db->join('user', 'mahasiswa_beasiswa.created_by = user.id', 'left');
+        $this->db->join('user', 'mahasiswa_beasiswa.admin_pendaftar = user.id', 'left');
         $this->db->where('nim_mahasiswa', $nim);
         $this->db->where('id_beasiswa', $id_beasiswa);
         $this->db->group_start(); //this will start grouping
-        $this->db->where('status_beasiswa', '0b');
-        $this->db->or_where('status_beasiswa', '1b' );
+        $this->db->where('status_beasiswa', '0');
+        $this->db->or_where('status_beasiswa', '1' );
         $this->db->group_end(); //this will end grouping
         $query = $this->db->get();
         return $query;
@@ -303,7 +303,7 @@ class Daftar_beasiswa_admin_m extends CI_Model
 
     public function getAdminPendaftar($id_beasiswa, $nim_mahasiswa)
     {
-        $this->db->select('mahasiswa_beasiswa.created_by');
+        $this->db->select('mahasiswa_beasiswa.admin_pendaftar');
         $this->db->from('mahasiswa_beasiswa');
         $this->db->where('id_beasiswa', $id_beasiswa);
         $this->db->where('nim_mahasiswa', $nim_mahasiswa);
@@ -311,13 +311,11 @@ class Daftar_beasiswa_admin_m extends CI_Model
         return $query;
     }
 
-   
-
     public function hapusPendaftarBeasiswa($id_beasiswa, $nim_mahasiswa)
     {
         $this->db->where('id_beasiswa', $id_beasiswa);
         $this->db->where('nim_mahasiswa', $nim_mahasiswa);
-        $this->db->where('created_by', $this->session->userdata('userid'));
+        $this->db->where('admin_pendaftar', $this->session->userdata('userid'));
         $this->db->delete('mahasiswa_beasiswa');
     }
 
@@ -331,13 +329,23 @@ class Daftar_beasiswa_admin_m extends CI_Model
 
     public function getBerkasPendaftaranBeasiswa($id_beasiswa, $nim_mahasiswa)
     {
-        
         $this->db->select('file_mahasiswa_daftar_beasiswa.*');
         $this->db->from('file_mahasiswa_daftar_beasiswa');
         $this->db->join('mahasiswa_beasiswa', 'mahasiswa_beasiswa.id = file_mahasiswa_daftar_beasiswa.id_mahasiswa_daftar_beasiswa');
         $this->db->where('nim_mahasiswa', $nim_mahasiswa);
         $this->db->where('id_beasiswa', $id_beasiswa);
-        $this->db->where('created_by', $this->session->userdata('userid'));
+        $this->db->where('admin_pendaftar', $this->session->userdata('userid'));
+        $query = $this->db->get();
+        return $query;
+    }
+
+    // @desc - mendapatkan list semua combo box pekerjaan ayah
+    // @used by
+    // - controller 'daftar-mahasiswa-beasiswa/input-data'
+    public function getPekerjaanAyah()
+    {
+        $this->db->select('*');
+        $this->db->from('pekerjaan_ayah');
         $query = $this->db->get();
         return $query;
     }

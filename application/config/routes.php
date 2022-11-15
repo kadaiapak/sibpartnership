@@ -61,6 +61,7 @@ $route['daftar-beasiswa/daftar/(:any)'] = 'daftar_beasiswa/daftar/$1';
 // untuk coba coba
 $route['daftar-beasiswa-admin'] = 'daftar_beasiswa_admin';
 $route['daftar-beasiswa-admin/pdf'] = 'daftar_beasiswa_admin/pdf';
+$route['daftar-beasiswa-admin/excel'] = 'daftar_beasiswa_admin/excel';
 $route['daftar-beasiswa-admin/detail/(:any)'] = 'daftar_beasiswa_admin/detail/$1';
 $route['daftar-beasiswa-admin/input-data/(:any)'] = 'daftar_beasiswa_admin/input_data/$1';
 $route['daftar-beasiswa-admin/daftar/(:any)'] = 'daftar_beasiswa_admin/daftar/$1';

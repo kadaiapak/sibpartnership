@@ -14,7 +14,7 @@ class Asal_beasiswa extends CI_Controller
     public function index()
     {   
         $data['cek_akses_user'] = $this->cek_akses_user;
-        $data['title'] = 'Sumber Pembiayaan';
+        $data['title'] = 'Asal Beasiswa';
         $data['asal_beasiswa'] = $this->beasiswa->getAsalBeasiswa()->result_array();
 
         $this->form_validation->set_rules('nama_asal_beasiswa', 'Asal Beasiswa', 'required');

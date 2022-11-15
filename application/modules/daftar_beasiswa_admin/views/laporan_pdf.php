@@ -83,14 +83,14 @@
             <tbody>
                 <?php 
                 $no = 1;
-                foreach ($master_beasiswa as $mb) : ?>
+                foreach ($pendaftar_beasiswa as $pb) : ?>
                 <tr>
                     <td scope="row"><?= $no++; ?></td>
-                    <td><?= $mb['nim_mahasiswa']; ?></td>
-                    <td><?= $mb['nama_mahasiswa']; ?></td>
-                    <td><?= $mb['prodi']; ?></td>
-                    <td><?= $mb['fakultas']; ?></td>
-                    <td><?= $mb['admin_pendaftar']; ?></td>
+                    <td><?= $pb['nim_mahasiswa']; ?></td>
+                    <td><?= $pb['nama_mahasiswa']; ?></td>
+                    <td><?= $pb['prodi']; ?></td>
+                    <td><?= $pb['fakultas']; ?></td>
+                    <td><?= $pb['admin_pendaftar']; ?></td>
                 </tr>
                 <?php endforeach;?>
             </tbody>

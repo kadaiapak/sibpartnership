@@ -1,3 +1,4 @@
+    
       <!-- Main Content -->
       <div class="main-content">
         <section class="section">
@@ -5,10 +6,11 @@
             <h1><?= $title; ?></h1>
           </div>
           <div id="flash" data-flash="<?= $this->session->flashdata('message'); ?>"></div>
+          
           <div class="row">
             <div class="col-lg-12 col-md-12 col-12 col-sm-12">
             <?= form_error('nama_kelompok', '<div class="alert alert-danger mb-4" role="alert">', '</div>'); ?>
-
+              
               <div class="card card-warning">
                 <div class="card-header">
                   <h4 style="font-size: 20px; color: #34395e;" >Daftar Master Beasiswa</h4>
@@ -18,10 +20,10 @@
                           Tambah Master Beasiswa
                       </a>
                     <?php } ?>
-
+                   
                   </div>
                 </div>
-
+            
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="table table-bordered table-hover" style="width: 100%;">
@@ -35,7 +37,7 @@
                           <th style="width: 8%;">Aktif</th>
                           <th style="width: 8%;">Tampilkan</th>
                           <th style="width: 20%;">Jenis Beasiswa</th>
-                          <th style="width: 15%;">Action</th>
+                          <th style="width: 15%;">Action</th> 
                         </tr>
                       </thead>
                       <tbody>
@@ -52,13 +54,13 @@
                               <td><?= $mb['jenis_beasiswa']; ?></td>
                               <td>
                                 <a href="<?= base_url('mbeasiswa/master_beasiswa/edit/'.$mb['id']); ?>" class="btn btn-primary btn-action mr-1" data-toggle="tooltip" title="Edit"><i class="fas fa-pencil-alt" ></i></a>
-                                  <!-- <form id="deleteFormMasterBeasiswa" style="display: inline-block;" action="< ?= base_url('mbeasiswa/master_beasiswa/del'); ?>" method="post">
-                                    <input name="master_beasiswa_id" type="hidden" value="< ?= $mb['id']; ?>">
-                                    <button id="deleteButtonMasterBeasiswa" class="btn btn-danger btn-action" data-toggle="tooltip" title="Delete">
+                                  <!-- <form id="deleteFormMasterBeasiswa" style="display: inline-block;" action="<?= base_url('mbeasiswa/master_beasiswa/del'); ?>" method="post">
+                                    <input name="master_beasiswa_id" type="hidden" value="<?= $mb['id']; ?>">    
+                                    <button class="btn btn-danger btn-action deleteButtonMasterBeasiswa" data-toggle="tooltip" title="Delete">
                                             <i class="fas fa-trash"></i>
                                     </button>
                                   </form> -->
-                                  <a href="<?= base_url(); ?>mbeasiswa/master_beasiswa/del/<?= $mb['id']; ?>" class="btn btn-danger btn-action mr-1 deleteButtonMasterBeasiswa" data-toggle="tooltip" title="Edit"><i class="fas fa-trash" ></i></a>
+                                <a href="<?= base_url(); ?>mbeasiswa/master_beasiswa/del/<?= $mb['id']; ?>" class="btn btn-danger btn-action mr-1 deleteButtonMasterBeasiswa" data-toggle="tooltip" title="Edit"><i class="fas fa-trash" ></i></a>
                               </td>
                             </tr>
                         <?php $i++ ?>
@@ -71,8 +73,8 @@
               </div>
             </div>
           </div>
-
-
+                  
+        
         </section>
-
+      
       </div>

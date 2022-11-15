@@ -12,11 +12,11 @@
               <?= form_error('nama_asal_beasiswa', '<div class="alert alert-danger mb-4" role="alert">', '</div>'); ?>
               <div class="card card-warning">
                 <div class="card-header">
-                  <h4 style="font-size: 20px; color: #34395e;" >Sumber Pembiayaan</h4>
+                  <h4 style="font-size: 20px; color: #34395e;" >Asal Beasiswa</h4>
                   <div class="card-header-action">
                     <?php if($cek_akses_user['tambah'] == '1') { ?>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#asalBeasiswaModal">
-                      Tambah Sumber Pembiayaan
+                      Tambah Asal Beasiswa
                     </button>
                     <?php } ?>
                   </div>
@@ -28,7 +28,7 @@
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Nama Sumber</th>
+                          <th>Nama Beasiswa</th>
                           <?php if($cek_akses_user['edit'] == '1' || $cek_akses_user['hapus'] == '1') { ?>
                           <th>Aksi</th>
                           <?php  } ?>
@@ -78,7 +78,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="asalBeasiswaModalLabel">Masukkan Sumber Pembiayaan</h5>
+                  <h5 class="modal-title" id="asalBeasiswaModalLabel">Masukkan Nama asal Beasiswa</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -88,12 +88,12 @@
 
                   <div class="modal-body">
                     <div class="form-group">
-                      <input type="text" class="form-control" id="nama_asal_beasiswa" name="nama_asal_beasiswa" placeholder="Nama Sumber Pembiayaan ...">
+                      <input type="text" class="form-control" id="nama_asal_beasiswa" name="nama_asal_beasiswa" placeholder="Nama asal Beasiswa ...">
                     </div>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                   </div>
 
                 </form>
@@ -108,7 +108,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="editAsalBeasiswaModalLabel">Edit Sumber Pembiayaan</h5>
+                  <h5 class="modal-title" id="editAsalBeasiswaModalLabel">Edit Nama Asal Beasiswa</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -119,11 +119,11 @@
                   <input type="hidden" name="id" value="<?= $ab['id']; ?>">
                   <div class="modal-body">
                     <div class="form-group">
-                      <input value="<?= $ab['nama_asal_beasiswa']; ?>" type="text" class="form-control" id="asal_beasiswa" name="asal_beasiswa" placeholder="Sumber Pembiayaan ...">
+                      <input value="<?= $ab['nama_asal_beasiswa']; ?>" type="text" class="form-control" id="asal_beasiswa" name="asal_beasiswa" placeholder="Nama Beasiswa ...">
                     </div>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Edit</button>
                   </div>
 

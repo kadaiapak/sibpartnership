@@ -1,4 +1,4 @@
-<?php
+<?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 // @used by
@@ -73,7 +73,7 @@ class Beasiswa_m extends CI_Model
         $params['keterangan'] = $post['keterangan'];
 
         $this->db->insert('jenis_beasiswa', $params);
-
+        
     }
 
     // @desc - hapus data jenis beasiswa berdasarkan id
@@ -152,6 +152,8 @@ class Beasiswa_m extends CI_Model
         return $query;
     }
 
+    
+
     // @desc - tambah nama beasiswa
     // @used by
     // - controller 'mbeasiswa/Nama_beasiswa/index-tambah'
@@ -196,11 +198,11 @@ class Beasiswa_m extends CI_Model
     //  -  fungsi count_user
     public function getMasterBeasiswa($id = null)
     {
-        $this->db->select('mb.*,
-        nb.nama_beasiswa as nama_beasiswa,
-        kb.nama_kelompok as kelompok_beasiswa,
-        ab.nama_asal_beasiswa as asal_beasiswa,
-        jb.nama_jenis as jenis_beasiswa,
+        $this->db->select('mb.*, 
+        nb.nama_beasiswa as nama_beasiswa, 
+        kb.nama_kelompok as kelompok_beasiswa, 
+        ab.nama_asal_beasiswa as asal_beasiswa, 
+        jb.nama_jenis as jenis_beasiswa, 
         p.nama as periode');
         $this->db->from('master_beasiswa mb');
         $this->db->join('nama_beasiswa nb', 'nb.id = mb.nama_beasiswa', 'left');
@@ -224,11 +226,11 @@ class Beasiswa_m extends CI_Model
     //  -  controller 'mbeasiswa/Master_beasiswa/index
     public function getMasterBeasiswaPagination($limit, $start)
     {
-        $this->db->select('mb.*,
-        nb.nama_beasiswa as nama_beasiswa,
-        kb.nama_kelompok as kelompok_beasiswa,
-        ab.nama_asal_beasiswa as asal_beasiswa,
-        jb.nama_jenis as jenis_beasiswa,
+        $this->db->select('mb.*, 
+        nb.nama_beasiswa as nama_beasiswa, 
+        kb.nama_kelompok as kelompok_beasiswa, 
+        ab.nama_asal_beasiswa as asal_beasiswa, 
+        jb.nama_jenis as jenis_beasiswa, 
         p.nama as periode');
         $this->db->from('master_beasiswa mb');
         $this->db->join('nama_beasiswa nb', 'nb.id = mb.nama_beasiswa', 'left');
@@ -237,7 +239,7 @@ class Beasiswa_m extends CI_Model
         $this->db->join('asal_beasiswa ab', 'ab.id = mb.asal_beasiswa','left');
         $this->db->join('periode p', 'p.id = mb.periode','left');
         $this->db->limit($limit, $start);
-        $this->db->order_by("tahun", "desc");
+        $this->db->order_by("id", "desc");
         $query = $this->db->get();
 
         return $query;
@@ -276,7 +278,7 @@ class Beasiswa_m extends CI_Model
         $params['tgl_awal_penetapan'] = $post['tgl_awal_penetapan'];
         $params['tgl_tutup_penetapan'] = $post['tgl_tutup_penetapan'];
         $params['user_created'] = $this->fungsi->user_login()->username;
-        $this->db->insert('master_beasiswa', $params);
+        $this->db->insert('master_beasiswa', $params);   
     }
 
     // @desc - edit data master beasiswa
@@ -291,26 +293,25 @@ class Beasiswa_m extends CI_Model
         $params['jenis_beasiswa'] = $post['jenis_beasiswa'];
         $params['biaya'] = $post['biaya'];
         $params['periode'] = $post['periode'];
+        $params['min_ipk'] = $post['min_ipk'];
         $params['tahun'] = $post['tahun'];
         $params['metode_pembayaran'] = $post['metode_pembayaran'];
-        $params['min_ipk'] = $post['min_ipk'];
         $params['kuota_pendaftaran'] = $post['kuota_pendaftaran'];
         $params['kuota_penetapan'] = $post['kuota_penetapan'];
-        $params['tanggal_penetapan'] = $post['tanggal_penetapan'];
-        $params['buka_pendaftaran'] = $post['is_buka_pendaftaran'];
-        $params['tampil'] = $post['is_show'];
-        $params['aktif'] = $post['is_active'];
-        $params['validasi_fakultas'] = $post['is_validasi_fakultas'];
-        $params['data_keluarga'] = $post['data_keluarga'];
         $params['tgl_awal_pendaftaran'] = $post['tgl_awal_pendaftaran'];
         $params['tgl_tutup_pendaftaran'] = $post['tgl_tutup_pendaftaran'];
         $params['tgl_awal_penetapan'] = $post['tgl_awal_penetapan'];
         $params['tgl_tutup_penetapan'] = $post['tgl_tutup_penetapan'];
+        $params['tanggal_penetapan'] = $post['tanggal_penetapan'];
+        $params['buka_pendaftaran'] = $post['is_buka_pendaftaran'];
+        $params['aktif'] = $post['is_active'];
+        $params['tampil'] = $post['is_show'];
+        $params['validasi_fakultas'] = $post['is_validasi_fakultas'];
         $params['updated_at'] = date('Y-m-d H:i:s');
 
         $this->db->where('id', $id);
         $this->db->update('master_beasiswa', $params);
-
+        
     }
 
     // @desc - hapus data master beasiswa
@@ -332,7 +333,7 @@ class Beasiswa_m extends CI_Model
         return $query;
     }
 
-
+    
 
     // @desc - mengambil data penerima beasiswa baik semua maupun detail berdasarkan id
     // @used by
@@ -340,10 +341,10 @@ class Beasiswa_m extends CI_Model
     // - controller 'data_beasiswa/Beasiswa/pdf($id)
     public function getPenerimaBeasiswa($id = null)
     {
-        $this->db->select('mabe.*,mb.*,
-                            nb.nama_beasiswa as nama_beasiswa,
-                            kb.nama_kelompok as kelompok_beasiswa,
-                            ab.nama_asal_beasiswa as asal_beasiswa,
+        $this->db->select('mabe.*,mb.*, 
+                            nb.nama_beasiswa as nama_beasiswa, 
+                            kb.nama_kelompok as kelompok_beasiswa, 
+                            ab.nama_asal_beasiswa as asal_beasiswa, 
                             p.nama as periode');
         $this->db->from('mahasiswa_beasiswa mabe');
         $this->db->join('master_beasiswa mb', 'mabe.id_beasiswa = mb.id');
@@ -444,91 +445,6 @@ class Beasiswa_m extends CI_Model
         return $query;
     }
 
-    // @desc -memanggil semua rincian pekerjaan ayah
-    // @used by
-    // - controller 'mbeasiswa/Pekerjaan_ayah/index'
-    public function getPekerjaanAyah()
-    {
-        $query = $this->db->get('pekerjaan_ayah');
-        return $query;
-    }
-
-    // @desc - tambah pekerjaan ayah
-    // @used by
-    //  -  controller 'mbeasiswa/pekerjaan_ayah/tambah
-    public function tambahPekerjaanAyah($post)
-    {
-        $params['nama_pekerjaan'] = $post['nama_pekerjaan'];
-        $params['point_penilaian'] = $post['point_penilaian'];
-        $params['is_active'] = $post['is_active'];
-        $this->db->insert('pekerjaan_ayah', $params);
-    }
-
-    // @desc - edit pekerjaan ayah
-    // @used by
-    // - controller 'mbeasiswa/pekerjaan_ayah/edit($id)'
-    public function editPekerjaanAyah($id, $post)
-    {
-        $dataEdit = [
-                'nama_pekerjaan' => $post['nama_pekerjaan'],
-                'point_penilaian' => $post['point_penilaian'],
-                'is_active' => $post['is_active'],
-            ];
-        $this->db->where('id', $id);
-        $this->db->update('pekerjaan_ayah', $dataEdit);
-    }
-
-    // @desc - edit persyaratan beasiswa
-    // @used by
-    // - controller 'mbeasiswa/pekerjaan_ayah/hapus($id)'
-    public function deletePekerjaanAyah($id)
-    {
-        $this->db->where('id', $id);
-        $this->db->delete('pekerjaan_ayah');
-    }
-
-    // @desc -memanggil semua rincian status orangtua
-    // @used by
-    // - controller 'mbeasiswa/Status_orangtua/index'
-    public function getStatusOrangtua()
-    {
-        $query = $this->db->get('status_orangtua');
-        return $query;
-    }
-
-    // @desc - tambah status orangtua
-    // @used by
-    //  -  controller 'mbeasiswa/status_orangtua/tambah
-    public function tambahStatusOrangtua($post)
-    {
-        $params['nama_status'] = $post['nama_status'];
-        $params['point_penilaian'] = $post['point_penilaian'];
-        $params['is_active'] = $post['is_active'];
-        $this->db->insert('status_orangtua', $params);
-    }
-
-    // @desc - edit status orangtua
-    // @used by
-    // - controller 'mbeasiswa/status_orangtua/edit($id)'
-    public function editStatusOrangtua($id, $post)
-    {
-        $dataEdit = [
-                'nama_status' => $post['nama_status'],
-                'point_penilaian' => $post['point_penilaian'],
-                'is_active' => $post['is_active'],
-            ];
-        $this->db->where('id', $id);
-        $this->db->update('status_orangtua', $dataEdit);
-    }
-
-    // @desc - delete Status Orangtua
-    // @used by
-    // - controller 'mbeasiswa/status_orangtua/hapus($id)'
-    public function deleteStatusOrangtua($id)
-    {
-        $this->db->where('id', $id);
-        $this->db->delete('status_orangtua');
-    }
 }
 
 ?>

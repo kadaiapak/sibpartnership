@@ -46,10 +46,9 @@ class Daftar_beasiswa_admin extends CI_Controller
     public function index()
     {
         $data['title'] = "Pendaftaran Beasiswa Oleh Admin";
-       
         // ambil master beasiswa yang masih buka
         $data['master_beasiswa'] = $this->daftar_beasiswa_admin->getMasterBeasiswaDaftar()->result_array();
-
+   
         $data['isi'] = 'daftar_beasiswa_admin_v';
         $this->load->view('template/wrapper_frontend_v', $data);
     }
@@ -61,7 +60,7 @@ class Daftar_beasiswa_admin extends CI_Controller
             redirect('auth/oops');
         }
 
-        
+        $data['detail_beasiswa'] = $this->penerima->getDetailBeasiswa($id);
         $data['id_beasiswa'] = $id;
         $data['title'] = "List Semua Pendaftar Beasiswa";
 
@@ -114,6 +113,10 @@ class Daftar_beasiswa_admin extends CI_Controller
         $datamhsaktif=$this->getmhsaktifapis($nim,checkSemester());
 
         $masterBeasiswa = $this->daftar_beasiswa_admin->cekTanggalModel($id)->row();
+        // echo '<pre>';
+        // print_r($masterBeasiswa->data_keluarga);
+        // echo '</pre>';
+        // die;
         $validasi_fakultas = $masterBeasiswa->validasi_fakultas;
 
         $cekAktif = $datamhsaktif->respon;
@@ -123,15 +126,23 @@ class Daftar_beasiswa_admin extends CI_Controller
             $data['cek_aktif'] = 0;
         }
 
+        $data['data_keluarga'] = $masterBeasiswa->data_keluarga;
         $data['mhs_api'] = $arrmhs;
         $data['id_beasiswa'] = $id;
         $data['persyaratan'] = $this->daftar_beasiswa_admin->getPersyaratan($id)->result_array();
+        $data['pekerjaan_ayah'] = $this->daftar_beasiswa_admin->getPekerjaanAyah()->result_array();
+     
         $persyaratanUtama = $data['persyaratan'];
         $data['title'] = 'Input Data Beasiswa';
 
         $this->form_validation->set_rules('nama_mahasiswa', 'Nama Mahasiswa', 'required');
         $this->form_validation->set_rules('prodi', 'Prodi', 'required');
         $this->form_validation->set_rules('nim', 'Nim', 'required');
+        if($masterBeasiswa->data_keluarga == 1)
+        {
+        $this->form_validation->set_rules('nama_ayah','Nama Ayah','required');
+        $this->form_validation->set_rules('nama_ibu','Nama Ibu','required');
+        }
         foreach ($persyaratanUtama as $pr) {
             $persyaratan = $pr['alias'];
             $nama_dokumen = $pr['persyaratan'];
@@ -203,7 +214,7 @@ class Daftar_beasiswa_admin extends CI_Controller
 
     public function detail_mahasiswa($id, $nim)
     {
-        $data['user_created'] = $this->daftar_beasiswa_admin->getAdminPendaftar($id, $nim)->row()->created_by;
+        $data['user_created'] = $this->daftar_beasiswa_admin->getAdminPendaftar($id, $nim)->row()->admin_pendaftar;
         $data['cek_akses_user'] = $this->cek_akses_user;
         $data['mahasiswa'] = $this->daftar_beasiswa_admin->getMahasiswaPendaftar($id, $nim)->row();
         $data['berkas_pendaftaran'] = $this->validasi->getBerkasPendaftaran($data['mahasiswa']->id)->result_array();
@@ -235,17 +246,11 @@ class Daftar_beasiswa_admin extends CI_Controller
         $nim_mahasiswa = $this->input->post('nim_mahasiswa');
         
         $cek_akses_hapus_pendaftar = $this->daftar_beasiswa_admin->getAdminPendaftar($id_beasiswa, $nim_mahasiswa)->row();
-        if($cek_akses_hapus_pendaftar->created_by != $this->session->userdata('userid') )
+        if($cek_akses_hapus_pendaftar->admin_pendaftar != $this->session->userdata('userid') )
         {
             $this->session->set_flashdata('gagal', 'Anda tidak memiliki akses untuk menghapus pendaftaran mahasiswa tersebut');
             redirect('daftar-beasiswa-admin/detail-mahasiswa/'.$id_beasiswa.'/'.$nim_mahasiswa);
         }
-        // echo '<pre>';
-        // print_r($cek_akses_hapus_pendaftar->created_by);
-        // print_r($this->session->userdata('userid'));
-        // echo '<pre>';
-        // die;
-
         // hapus berkas terlebih dahulu
           $berkas_pendaftaran = $this->daftar_beasiswa_admin->getBerkasPendaftaranBeasiswa($id_beasiswa, $nim_mahasiswa)->result_array();
        
@@ -303,7 +308,7 @@ class Daftar_beasiswa_admin extends CI_Controller
         $data['periode'] = $this->input->post('periode');
         $data['tahun'] = $this->input->post('tahun');
         $this->load->library('pdfgenerator');
-        $data['master_beasiswa'] = $this->daftar_beasiswa_admin->getPenerimaBeasiswa($id)->result_array();
+        $data['pendaftar_beasiswa'] = $this->daftar_beasiswa_admin->getPendaftarBeasiswa($id)->result_array();
 
         // title dari pdf
         $data['title_pdf'] = 'Laporan Mahasiswa';
@@ -321,6 +326,26 @@ class Daftar_beasiswa_admin extends CI_Controller
         $this->pdfgenerator->generate($html, $file_pdf,$paper,$orientation);
     }
 
+      public function excel()
+    {
+        $id = $this->input->post('id_beasiswa');
+        $data['nama_beasiswa'] = $this->input->post('nama_beasiswa');
+        $data['periode'] = $this->input->post('periode');
+        $data['tahun'] = $this->input->post('tahun');
+        $data['pendaftar_beasiswa'] = $this->daftar_beasiswa_admin->getPendaftarBeasiswa($id)->result_array();
+
+        // title dari pdf
+        $data['title'] = 'laporan_excel';
+        
+        // filename dari pdf ketika didownload
+        // $file_pdf = 'laporan_mahasiswa_didaftarkan_beasiswa';
+        // setting paper
+        // $paper = 'A4';
+        //orientasi paper potrait / landscape
+        // $orientation = "landscape";
+
+		$html = $this->load->view('laporan_excel',$data);	    
+    }
     public function nim_check()
     {
             $post = $this->input->post(null, TRUE);
